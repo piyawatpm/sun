@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import GoogleMapReact from 'google-map-react';
 import Interface from "../components/Interface";
+import Time from "../components/Time";
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
@@ -33,6 +34,7 @@ export default function Home() {
         /> */}
 
         </GoogleMapReact>
+        <Time/>
       </div>
     </>
 
