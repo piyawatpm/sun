@@ -11,7 +11,7 @@ const Interface = () => {
     const [tab, setTab] = useState<Tab>(Tab.overview)
 
     return (
-        <div className=" w-[586px] h-[888px]   absolute z-10 my-auto translate-y-[-50%] top-1/2  left-[5%] ">
+        <div className=" w-[586px] h-[888px] absolute z-10 my-auto  translate-y-[-53%] 3xl:translate-y-[-53%] top-1/2  left-[5%]  scale-75 3xl:scale-100  ">
             <div className=" flex text-center  text-white h-[64px]  text-[24px] font-semibold " >
                 <div onClick={() => {
                     setTab(Tab.overview)
