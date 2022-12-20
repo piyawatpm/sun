@@ -147,7 +147,7 @@ const people = [
           )
   
     return (
-      <div className=" w-[267px] scroll">
+      <div className=" w-[267px]">
         <Combobox value={selected} onChange={setSelected}>
           <div className="relative mt-1">
             <div className="relative w-full cursor-default   bg-[#F5F5F5] text-left  border-b-2 border-[#707070] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300  ">
@@ -168,7 +168,7 @@ const people = [
               leaveTo="opacity-0"
               afterLeave={() => setQuery('')}
             >
-              <Combobox.Options className=" z-10 absolute mt-1 max-h-60 w-full overflow-auto  border-[1px] border-[#707070] bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+              <Combobox.Options className=" z-10 absolute mt-1 max-h-60 w-full overflow-auto   border-[1px] border-[#707070] bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                 {filteredPeople.length === 0 && query !== '' ? (
                   <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
                     Nothing found.
@@ -215,7 +215,7 @@ const people = [
     )
   }
 const districtTab = ()=>{
-return     <div className=" flex  flex-col pb-6 px-3 h-full bg-[#F5F5F5] rounded-b-md">
+return     <div className=" flex  flex-col pb-6 px-3 h-full bg-[#F5F5F5] rounded-b-md ">
    
 <div className=" w-full flex  min-h-[104px] pt-8 pb-[18px] ">
 <MyCombobox/>
@@ -228,7 +228,7 @@ return     <div className=" flex  flex-col pb-6 px-3 h-full bg-[#F5F5F5] rounded
         <img src="/images/machine.png" className="w-[27px] h-[35px]" alt="" />
   </button>
 </div>
-    <div className="overflow-scroll space-y-11 flex flex-col items-center rounded-[6px]  pl-[30px] pr-[20px]  ">
+    <div className="overflow-scroll space-y-11 flex flex-col items-center rounded-[6px]  pl-[30px] pr-[20px]  custom-scrollbar">
         {mockData.map((data: Status) => {
             return (
                 <div className=" flex flex-col items-center rounded-[6px] w-full space-y-3 shadow-md border-t-[3px] border-l-[3px] bg-[#F5F5F5] border-white shadow-gray-300  p-4 relative">
