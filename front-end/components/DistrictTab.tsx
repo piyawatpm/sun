@@ -220,7 +220,7 @@ const districtTab = ({openAddDevicePopup}:any)=>{
 
 return     <div className=" flex  flex-col pb-6 px-3 h-full bg-[#F5F5F5] rounded-b-md  ">
 
-<div className=" w-full flex  min-h-[104px] pt-8 pb-[18px] ">
+<div className=" w-full flex  min-h-[104px] pt-8 pb-[18px] pl-[30px] ">
 <MyCombobox/>
 <div className=' text-left flex items-start ml-[30px]'>
 <p className=' text-[20px] font-bold  text-[#656565]'>Client</p>

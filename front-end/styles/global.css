@@ -20,6 +20,17 @@ button.styled{
     border-color: white;
     background-color: #F5F5F5;
 }
+button.styled:active{
+  border-radius: 0.375rem/* 6px */;
+  box-shadow: inset 2.5px 2.5px 2px rgba(0, 0, 0, 0.193);
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-bottom-width: 3px;
+  border-right-width: 3px;
+  border-color: white;
+  background-color: #F5F5F5;
+}
+/* rounded-md inner-shadow2  border-b-2 border-r-2 border-white shadow-black  */
 
 .shine {
     box-shadow: 0px -3px 15px 3px #34d3d6;

@@ -1,37 +1,44 @@
 import React, { useState } from "react";
-import GoogleMapReact from 'google-map-react';
+import GoogleMapReact from "google-map-react";
 import Interface from "../components/Interface";
 import Time from "../components/Time";
-import Login from "./login";
+
 import AddDevice from "../components/AddDevice";
+import Login from "./Login";
+import { GetServerSidePropsContext } from "next";
+import { getCookieFromServer } from "../utils/cookie";
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
-
-export default function Home() {
-  const [isOpenInterface, setIsOpenInterface] = useState(true)
-  const [isLogin,setIsLogin] = useState(false)
-  const [isAddDevice,setIsAddDevice] = useState(false)
+type HomeProps = {
+  isLoggedin: boolean;
+};
+export default function Home({ isLoggedin }: HomeProps) {
+  console.log(isLoggedin);
+  const [isOpenInterface, setIsOpenInterface] = useState(true);
+  const [isLogin, setIsLogin] = useState(isLoggedin);
+  const [isAddDevice, setIsAddDevice] = useState(false);
   const defaultProps = {
     center: {
-      lat: -33.868820,
-      lng: 151.209290
+      lat: -33.86882,
+      lng: 151.20929,
     },
-    zoom: 10
+    zoom: 10,
   };
-  const openAddDevicePopup=()=>{
-    setIsAddDevice(true)
-  }
-  const closeAddDevicePopup=()=>{
-    setIsAddDevice(false)
-  }
+  const openAddDevicePopup = () => {
+    setIsAddDevice(true);
+  };
+  const closeAddDevicePopup = () => {
+    setIsAddDevice(false);
+  };
   return (
     <>
-      <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
+      <div style={{ height: "100vh", width: "100%", position: "relative" }}>
+        {isLogin ? (
+          <Interface openAddDevicePopup={openAddDevicePopup} />
+        ) : (
+          <Login login={setIsLogin} />
+        )}
+        {isAddDevice && <AddDevice closeAddDevicePopup={closeAddDevicePopup} />}
 
-
-       {isLogin? <Interface openAddDevicePopup={openAddDevicePopup} />:<Login login={setIsLogin} />} 
-       {isAddDevice&&<AddDevice closeAddDevicePopup={closeAddDevicePopup}/>}
-    
         <GoogleMapReact
           bootstrapURLKeys={{ key: "AIzaSyCTd-4w5z5_-dQtt6U1_dK-lWXRQVSjgGU" }}
           defaultCenter={defaultProps.center}
@@ -42,11 +49,33 @@ export default function Home() {
           lng={151.209290}
           text="My Marker"
         /> */}
-
         </GoogleMapReact>
-        <Time/>
+        <Time />
       </div>
     </>
-
   );
+}
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  try {
+    const token = getCookieFromServer("userToken", ctx);
+    if (token) {
+      return {
+        props: {
+          isLoggedin: true,
+        },
+      };
+    } else {
+      return {
+        props: {
+          isLoggedin: false,
+        },
+      };
+    }
+  } catch (error) {
+    return {
+      props: {
+        isLoggedin: false,
+      },
+    };
+  }
 }
