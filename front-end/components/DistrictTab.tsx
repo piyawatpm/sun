@@ -2,6 +2,7 @@ import { Fragment, useState } from 'react'
 import { Combobox, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/20/solid'
 
+
 type Status = {
     district: string,
     ozoneMate: number,
@@ -214,16 +215,18 @@ const people = [
       </div>
     )
   }
-const districtTab = ()=>{
-return     <div className=" flex  flex-col pb-6 px-3 h-full bg-[#F5F5F5] rounded-b-md ">
-   
+  
+const districtTab = ({openAddDevicePopup}:any)=>{
+
+return     <div className=" flex  flex-col pb-6 px-3 h-full bg-[#F5F5F5] rounded-b-md  ">
+
 <div className=" w-full flex  min-h-[104px] pt-8 pb-[18px] ">
 <MyCombobox/>
 <div className=' text-left flex items-start ml-[30px]'>
 <p className=' text-[20px] font-bold  text-[#656565]'>Client</p>
 </div>
 
-  <button className=" ml-auto flex items-center justify-center w-[136px] h-[54px] space-x-3 bg-[#F2F2F2] rounded-[3px]  border-t-[3px] border-l-[3px] border-white shadow-gray-300 shadow-md">
+  <button onClick={openAddDevicePopup} className=" ml-auto flex items-center justify-center w-[136px] h-[54px] space-x-3 styled">
         <img src="/images/add.png" alt="" />
         <img src="/images/machine.png" className="w-[27px] h-[35px]" alt="" />
   </button>

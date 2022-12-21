@@ -6,8 +6,10 @@ enum Tab {
     overview = "OVERVIEW",
     districtList = "districtList"
 }
-
-const Interface = () => {
+type InterfaceProps={
+    openAddDevicePopup:()=>void
+}
+const Interface = ({openAddDevicePopup}:InterfaceProps) => {
     const [tab, setTab] = useState<Tab>(Tab.overview)
 
     return (
@@ -27,7 +29,7 @@ const Interface = () => {
             <div className=" w-full h-2 bg-gray-400">
                 <div className={` ${tab === Tab.districtList && " translate-x-[100%]"} transition relative  duration-500  w-1/2 h-full bg-[#00D3FF] shine `}></div>
             </div>
-            {tab === Tab.overview ? <OverviewTab/> :<DistrictTab/>
+            {tab === Tab.overview ? <OverviewTab/> :<DistrictTab openAddDevicePopup={openAddDevicePopup}/>
             }
 
         </div>
