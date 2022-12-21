@@ -21,7 +21,7 @@ const Login = ({ login }: { login: any }) => {
     e.preventDefault();
     try {
       const { username, password } = loginDetails;
-      const res = await api.post("http://localhost:3000/api/mock-auth/login", {
+      const res = await api.post("/api/mock-auth/login", {
         username,
         password,
       });

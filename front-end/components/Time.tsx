@@ -21,7 +21,7 @@ const Time = () => {
   ];
   const handleCheck = async () => {
     try {
-      const res = await axios.post("http://localhost:3000/api/mock-auth/check");
+      const res = await axios.post("/api/mock-auth/check");
     } catch (error) {
       alert(error);
     }
