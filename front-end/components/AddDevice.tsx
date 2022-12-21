@@ -8,7 +8,7 @@ const AddDevice = ({closeAddDevicePopup}:AddDeviceProps)=>{
    return(<div className=" z-20    bg-black/[45%] fixed inset-0  items-center justify-center font-bold">
    <div className=" flex items-center justify-center h-full  scale-75 3xl:scale-100">
     
-     <div className=" w-[1548px] h-[990px] bg-[#F5F5F5] px-[125px] py-[55px]  relative">
+     <div className=" w-[1548px] h-[990px] bg-[#F5F5F5] px-[125px] py-[55px]  relative rounded-[10px]">
    {isPopupOpen&& <div className=" z-10 absolute bg-black/[45%] inset-0">
             <div className=" bg-white w-[585px] h-[260px] rounded-[5px] top-1/2 left-1/2 absolute translate-x-[-50%]  translate-y-[-50%] flex flex-col items-center justify-center space-y-10">
         <h1 className=" text-[28px] font-bold">DEVICE ADDED</h1>

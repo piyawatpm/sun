@@ -3,16 +3,18 @@ import Axios, {
   AxiosRequestHeaders,
   AxiosResponse,
 } from 'axios';
+// @ts-ignore
 import config from 'config';
-import { deleteAllCookies, getCookie, setCookie } from 'utils/cookie';
+import { deleteAllCookies, getCookie, setCookie } from '../utils/cookie';
 import { v4 as uuidv4 } from 'uuid';
+// @ts-ignore
 import retryAxios from './retryAxios';
 
 const withoutRefreshTokenUrl = ['/api/v1/pex-portal/userprofile/login'];
 
 const authRequestInterceptor = (axiosConfig: AxiosRequestConfig) => {
   const accessToken = getCookie('accessToken');
-
+// @ts-ignore
   const headers: AxiosRequestHeaders = {
     'content-type':
       axiosConfig?.headers?.['content-type'] || 'application/json',

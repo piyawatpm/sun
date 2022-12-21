@@ -4,7 +4,7 @@ import Interface from "../components/Interface";
 import Time from "../components/Time";
 
 import AddDevice from "../components/AddDevice";
-import Login from "./Login";
+import Login from "../components/Login";
 import { GetServerSidePropsContext } from "next";
 import { getCookieFromServer } from "../utils/cookie";
 
