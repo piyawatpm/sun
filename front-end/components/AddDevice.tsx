@@ -5,7 +5,7 @@ type AddDeviceProps={
 }
 const AddDevice = ({closeAddDevicePopup}:AddDeviceProps)=>{
     const [isPopupOpen,setIsPopupOpen] = useState(false)
-   return(<div className=" z-20    bg-black/[45%] fixed inset-0  items-center justify-center font-bold">
+   return(<div className=" z-20    bg-black/[45%] fixed inset-0  items-center justify-center font-bold scale-75 3xl:scale-100">
    <div className=" flex items-center justify-center h-full ">
     
      <div className=" w-[1548px] h-[990px] bg-[#F5F5F5] px-[125px] py-[55px]  relative">
