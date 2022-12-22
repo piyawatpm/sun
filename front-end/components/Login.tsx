@@ -3,7 +3,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { api } from "../lib/axios";
 import { getCookieFromServer, setCookie } from "../utils/cookie";
 import { GetServerSidePropsContext } from "next";
-import { AiFillEyeInvisible ,AiFillEye } from "react-icons/ai";
+import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 type LoginDetails = {
   username: string;
   password: string;
@@ -12,8 +12,8 @@ const Login = ({ login }: { login: any }) => {
   const [loginDetails, setLoginDetails] = useState<LoginDetails>();
   const [passwordShown, setPasswordShown] = useState(false);
   const togglePassword = () => {
-       setPasswordShown(p=>!p);
-     };
+    setPasswordShown((p) => !p);
+  };
   const handleChangeForm = (e: ChangeEvent<HTMLInputElement>) => {
     setLoginDetails((p) => ({ ...p, [e.target.name]: e.target.value }));
   };
@@ -21,10 +21,13 @@ const Login = ({ login }: { login: any }) => {
     e.preventDefault();
     try {
       const { username, password } = loginDetails;
-      const res = await api.post("/api/mock-auth/login", {
-        username,
-        password,
-      });
+      const res = await api.post(
+        "https://ozonemate.cloudtronics.com.au/auth/login/create",
+        {
+          username,
+          password,
+        }
+      );
       login(true);
       console.log("res = ", res.data);
       const { token } = res.data;
@@ -56,17 +59,19 @@ const Login = ({ login }: { login: any }) => {
           <div className=" flex flex-col mt-7 space-y-[10px]">
             <h2>Password:</h2>
             <div className=" w-full relative">
-            <input
-              onChange={handleChangeForm}
-              name={"password"}
-              type={passwordShown ? "text" : "password"}
-              className="h-11 px-[10px] w-full rounded-md inner-shadow2  border-b-2 border-r-2 border-white shadow-black relative"
-            />
-           <div  onClick={togglePassword} className="  cursor-pointer absolute right-2 bottom-1/2 translate-y-[50%]">
-           {passwordShown?<AiFillEye/>:<AiFillEyeInvisible />}
-              </div> 
+              <input
+                onChange={handleChangeForm}
+                name={"password"}
+                type={passwordShown ? "text" : "password"}
+                className="h-11 px-[10px] w-full rounded-md inner-shadow2  border-b-2 border-r-2 border-white shadow-black relative"
+              />
+              <div
+                onClick={togglePassword}
+                className="  cursor-pointer absolute right-2 bottom-1/2 translate-y-[50%]"
+              >
+                {passwordShown ? <AiFillEye /> : <AiFillEyeInvisible />}
+              </div>
             </div>
-           
           </div>
           <button
             onClick={handleSubmitForm}
