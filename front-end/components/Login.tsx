@@ -22,7 +22,7 @@ const Login = ({ login }: { login: any }) => {
     try {
       const { username, password } = loginDetails;
       const res = await api.post(
-        "https://ozonemate.cloudtronics.com.au/auth/login/create",
+        "https://ozonemate.cloudtronics.com.au/auth/token/login/",
         {
           username,
           password,
