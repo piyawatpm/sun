@@ -29,6 +29,7 @@ const Login = ({ login }: { login: any }) => {
         }
       );
       login(true);
+      
       console.log("res = ", res.data);
       const { token } = res.data;
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
