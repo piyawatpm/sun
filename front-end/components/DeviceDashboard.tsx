@@ -51,7 +51,7 @@ const DeviceDashboard = () => {
     <Accordion
       open={open}
       icon={<Icon2 id={1} open={open} />}
-      className={`  absolute w-[1574px] top-0  left-1/2 z-10 translate-x-[-50%]  scale-75 3xl:scale-100  flex flex-col`}
+      className={`  absolute w-[1574px] top-0 mt-[100px]  left-1/2 z-10 translate-x-[-50%]  scale-75 3xl:scale-100  flex flex-col`}
     >
       <AccordionHeader
         onClick={handleOpen}
