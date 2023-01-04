@@ -16,6 +16,48 @@ import mockJson from "../utils/testJson.json";
 type HomeProps = {
   isLoggedin: boolean;
 };
+export const mockDevices = [
+  {
+    status: "online",
+    cellHours: 1075,
+    oxyHours: 2012,
+    district: "area1",
+    client: "client1",
+  },
+  {
+    status: "offline",
+    cellHours: 1453,
+    oxyHours: 3042,
+    district: "area1",
+    client: "client1",
+  },
+  {
+    status: "warning",
+    cellHours: 5012,
+    oxyHours: 1053,
+    district: "area2",
+    client: "client2",
+  },
+  {
+    status: "maintencence",
+    cellHours: 1661,
+    oxyHours: 3212,
+    district: "area3",
+    client: "client3",
+  },
+  {
+    status: "online",
+    cellHours: 60220,
+    oxyHours: 2240,
+    district: "area3",
+    client: "client4",
+  },
+];
+export const mockDistrict = ["area1", "area2", "area3"];
+export const filterDistrict = (deviceArr, districtArr) => {
+  const totalArea = districtArr.length
+  
+};
 export default function Home({ isLoggedin }: HomeProps) {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
