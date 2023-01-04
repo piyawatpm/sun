@@ -16,8 +16,10 @@ import mockJson from "../utils/testJson.json";
 type HomeProps = {
   isLoggedin: boolean;
 };
+
 export const mockDevices = [
   {
+    deviceId: 1,
     status: "online",
     cellHours: 1075,
     oxyHours: 2012,
@@ -25,6 +27,7 @@ export const mockDevices = [
     client: "client1",
   },
   {
+    deviceId: 2,
     status: "offline",
     cellHours: 1453,
     oxyHours: 3042,
@@ -32,6 +35,7 @@ export const mockDevices = [
     client: "client1",
   },
   {
+    deviceId: 3,
     status: "warning",
     cellHours: 5012,
     oxyHours: 1053,
@@ -39,6 +43,7 @@ export const mockDevices = [
     client: "client2",
   },
   {
+    deviceId: 4,
     status: "maintencence",
     cellHours: 1661,
     oxyHours: 3212,
@@ -46,6 +51,7 @@ export const mockDevices = [
     client: "client3",
   },
   {
+    deviceId: 5,
     status: "online",
     cellHours: 60220,
     oxyHours: 2240,
@@ -54,9 +60,43 @@ export const mockDevices = [
   },
 ];
 export const mockDistrict = ["area1", "area2", "area3"];
-export const filterDistrict = (deviceArr, districtArr) => {
-  const totalArea = districtArr.length
-  
+export const filterDistrict = (deviceArr = {}, districtArr = {}) => {
+  return {
+    area1: [
+      {
+        status: "online",
+        cellHours: 1075,
+        oxyHours: 2012,
+        district: "area1",
+        client: "client1",
+      },
+      {
+        status: "offline",
+        cellHours: 1453,
+        oxyHours: 3042,
+        district: "area1",
+        client: "client1",
+      },
+    ],
+    area2: [
+      {
+        status: "warning",
+        cellHours: 5012,
+        oxyHours: 1053,
+        district: "area2",
+        client: "client2",
+      },
+    ],
+    area3: [
+      {
+        status: "maintencence",
+        cellHours: 1661,
+        oxyHours: 3212,
+        district: "area3",
+        client: "client3",
+      },
+    ],
+  };
 };
 export default function Home({ isLoggedin }: HomeProps) {
   const { isLoaded } = useJsApiLoader({

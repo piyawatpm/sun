@@ -1,6 +1,6 @@
 type DataCardsProps = {
-  setSelected: any;
-  isSelected: any;
+  setSelected?: any;
+  isSelected?: any;
   data: any;
   changeView?: any;
 };
@@ -56,7 +56,7 @@ const DataCards = ({
         </div>
         <div className=" flex items-center space-x-3">
           <img className="" src="/images/warning.png" alt="" />
-          <h2 className="  text-[24px] ">{data.alert}</h2>
+          <h2 className="  text-[24px] ">{data.warning}</h2>
         </div>
       </div>
     </div>
