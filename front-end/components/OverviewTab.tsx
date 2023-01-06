@@ -9,10 +9,10 @@ const overviewTab = () => {
     return e.status === "offline";
   }).length;
   const totalWarning = mockDevices.filter((e) => {
-    return e.status === "warning";
+    return e.isWarning === true;
   }).length;
   const totalMaintencence = mockDevices.filter((e) => {
-    return e.status === "maintencence";
+    return e.isMaintencence === true;
   }).length;
   const totalCellHours = mockDevices.reduce((accumulator, object) => {
     return accumulator + object.cellHours;

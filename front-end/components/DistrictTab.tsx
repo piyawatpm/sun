@@ -8,212 +8,253 @@ import MyCombobox from "./MyCombobox";
 
 type View = "DistrictView" | "DevicesView";
 type View2 = "overall" | "filterByClients" | "filterByDistrict";
+const testData = {
+  area1: [
+    {
+      deviceId: 1,
+      status: "online",
+      cellHours: 1075,
+      oxyHours: 2012,
+      district: "area1",
+      client: "client2",
+      isWarning: true,
+      isMaintencence: false,
+    },
+    {
+      deviceId: 2,
+      status: "offline",
+      cellHours: 1453,
+      oxyHours: 3042,
+      district: "area1",
+      client: "client1",
+      isWarning: false,
+      isMaintencence: false,
+    },
+  ],
+  area2: [
+    {
+      deviceId: 3,
+      status: "online",
+      cellHours: 5012,
+      oxyHours: 1053,
+      district: "area2",
+      client: "client2",
+      isWarning: false,
+      isMaintencence: false,
+    },
+  ],
+  area3: [
+    {
+      deviceId: 4,
+      status: "offline",
+      cellHours: 1661,
+      oxyHours: 3212,
+      district: "area3",
+      client: "client3",
+      isWarning: false,
+      isMaintencence: true,
+    },
+    {
+      deviceId: 5,
+      status: "offline",
+      cellHours: 60220,
+      oxyHours: 2240,
+      district: "area3",
+      client: "client3",
+      isWarning: true,
+    },
+  ],
+};
 const districtTab = ({ openAddDevicePopup }: any) => {
   const [viewState, setViewState] = useState<View2>("overall");
   const [isSelectDistrict, setIsSelectDistrict] = useState<string>();
-
+  const [allDevices, setAllDevices] = useState(testData);
+  const filteredByClients = (clientName) => {
+    console.log(allDevices);
+    if (clientName === "All") {
+      setAllDevices(testData);
+      return;
+    }
+    // @ts-ignore
+    setAllDevices((prv) => {
+      let newDevice = {};
+      for (const property in testData) {
+        let result = testData[property].filter((e) => {
+          // console.log(e.client)
+          return e.client === clientName;
+        });
+        if (result.length >= 1) newDevice[property] = result;
+      }
+      console.log(newDevice);
+      return newDevice;
+    });
+  };
   // const changeToDevicesList = () => {
   //   setViewState("DevicesView");
   // };
-  const changeToDistrictList = () => {
-    setViewState("overall");
-  };
-  type DistrictStatus = {
-    district: string;
-    ozoneMate: number;
-    online: number;
-    offline: number;
-    alert: number;
-    id: string;
-    user: string;
-  };
-  const mockDataDistrict: DistrictStatus[] = [
-    {
-      district: "JAURES",
-      ozoneMate: 5,
-      online: 6,
-      offline: 7,
-      alert: 1,
-      id: uuidv4(),
-      user: "Wade Cooper",
-    },
-    {
-      district: "FAUBORG SAINT-GERMAIN",
-      ozoneMate: 5,
-      online: 6,
-      offline: 7,
-      alert: 0,
-      id: uuidv4(),
-      user: "Wade Cooper",
-    },
-    {
-      district: "LATIN QUARTER",
-      ozoneMate: 5,
-      online: 6,
-      offline: 7,
-      alert: 0,
-      id: uuidv4(),
-      user: "Tom Cook",
-    },
-    {
-      district: "PALAIS ROYAL",
-      ozoneMate: 5,
-      online: 6,
-      offline: 7,
-      alert: 4,
-      id: uuidv4(),
-      user: "Arlene Mccoy",
-    },
-    {
-      district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-      ozoneMate: 5,
-      online: 6,
-      offline: 7,
-      alert: 1,
-      id: uuidv4(),
-      user: "Tom Cook",
-    },
-    {
-      district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-      ozoneMate: 5,
-      online: 6,
-      offline: 7,
-      alert: 0,
-      id: uuidv4(),
-      user: "Arlene Mccoy",
-    },
-    {
-      district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-      ozoneMate: 5,
-      online: 6,
-      offline: 7,
-      alert: 0,
-      id: uuidv4(),
-      user: "Arlene Mccoy",
-    },
-    {
-      district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-      ozoneMate: 5,
-      online: 6,
-      offline: 7,
-      alert: 0,
-      id: uuidv4(),
-      user: "Arlene Mccoy",
-    },
-    {
-      district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-      ozoneMate: 5,
-      online: 6,
-      offline: 7,
-      alert: 1,
-      id: uuidv4(),
-      user: "Tanya Fox",
-    },
-    {
-      district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-      ozoneMate: 5,
-      online: 6,
-      offline: 7,
-      alert: 7,
-      id: uuidv4(),
-      user: "Tanya Fox",
-    },
-    {
-      district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-      ozoneMate: 5,
-      online: 6,
-      offline: 7,
-      alert: 0,
-      id: uuidv4(),
-      user: "Tanya Fox",
-    },
-    {
-      district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-      ozoneMate: 5,
-      online: 6,
-      offline: 7,
-      alert: 0,
-      id: uuidv4(),
-      user: "Arlene Mccoy",
-    },
-    {
-      district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-      ozoneMate: 5,
-      online: 6,
-      offline: 7,
-      alert: 1,
-      id: uuidv4(),
-      user: "Arlene Mccoy",
-    },
-    {
-      district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-      ozoneMate: 5,
-      online: 6,
-      offline: 7,
-      alert: 5,
-      id: uuidv4(),
-      user: "Hellen Schmidt",
-    },
-    {
-      district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-      ozoneMate: 5,
-      online: 6,
-      offline: 7,
-      alert: 0,
-      id: uuidv4(),
-      user: "Hellen Schmidt",
-    },
-    {
-      district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-      ozoneMate: 5,
-      online: 6,
-      offline: 7,
-      alert: 0,
-      id: uuidv4(),
-      user: "Hellen Schmidt",
-    },
-  ];
-  const testData = {
-    area1: [
-      {
-        status: "online",
-        cellHours: 1075,
-        oxyHours: 2012,
-        district: "area1",
-        client: "client1",
-      },
-      {
-        status: "offline",
-        cellHours: 1453,
-        oxyHours: 3042,
-        district: "area1",
-        client: "client1",
-      },
-    ],
-    area2: [
-      {
-        status: "warning",
-        cellHours: 5012,
-        oxyHours: 1053,
-        district: "area2",
-        client: "client2",
-      },
-    ],
-    area3: [
-      {
-        status: "maintencence",
-        cellHours: 1661,
-        oxyHours: 3212,
-        district: "area3",
-        client: "client3",
-      },
-    ],
-  };
+  // const changeToDistrictList = () => {
+  //   setViewState("overall");
+  // };
+  // type DistrictStatus = {
+  //   district: string;
+  //   ozoneMate: number;
+  //   online: number;
+  //   offline: number;
+  //   alert: number;
+  //   id: string;
+  //   user: string;
+  // };
+  // const mockDataDistrict: DistrictStatus[] = [
+  //   {
+  //     district: "JAURES",
+  //     ozoneMate: 5,
+  //     online: 6,
+  //     offline: 7,
+  //     alert: 1,
+  //     id: uuidv4(),
+  //     user: "Wade Cooper",
+  //   },
+  //   {
+  //     district: "FAUBORG SAINT-GERMAIN",
+  //     ozoneMate: 5,
+  //     online: 6,
+  //     offline: 7,
+  //     alert: 0,
+  //     id: uuidv4(),
+  //     user: "Wade Cooper",
+  //   },
+  //   {
+  //     district: "LATIN QUARTER",
+  //     ozoneMate: 5,
+  //     online: 6,
+  //     offline: 7,
+  //     alert: 0,
+  //     id: uuidv4(),
+  //     user: "Tom Cook",
+  //   },
+  //   {
+  //     district: "PALAIS ROYAL",
+  //     ozoneMate: 5,
+  //     online: 6,
+  //     offline: 7,
+  //     alert: 4,
+  //     id: uuidv4(),
+  //     user: "Arlene Mccoy",
+  //   },
+  //   {
+  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
+  //     ozoneMate: 5,
+  //     online: 6,
+  //     offline: 7,
+  //     alert: 1,
+  //     id: uuidv4(),
+  //     user: "Tom Cook",
+  //   },
+  //   {
+  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
+  //     ozoneMate: 5,
+  //     online: 6,
+  //     offline: 7,
+  //     alert: 0,
+  //     id: uuidv4(),
+  //     user: "Arlene Mccoy",
+  //   },
+  //   {
+  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
+  //     ozoneMate: 5,
+  //     online: 6,
+  //     offline: 7,
+  //     alert: 0,
+  //     id: uuidv4(),
+  //     user: "Arlene Mccoy",
+  //   },
+  //   {
+  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
+  //     ozoneMate: 5,
+  //     online: 6,
+  //     offline: 7,
+  //     alert: 0,
+  //     id: uuidv4(),
+  //     user: "Arlene Mccoy",
+  //   },
+  //   {
+  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
+  //     ozoneMate: 5,
+  //     online: 6,
+  //     offline: 7,
+  //     alert: 1,
+  //     id: uuidv4(),
+  //     user: "Tanya Fox",
+  //   },
+  //   {
+  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
+  //     ozoneMate: 5,
+  //     online: 6,
+  //     offline: 7,
+  //     alert: 7,
+  //     id: uuidv4(),
+  //     user: "Tanya Fox",
+  //   },
+  //   {
+  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
+  //     ozoneMate: 5,
+  //     online: 6,
+  //     offline: 7,
+  //     alert: 0,
+  //     id: uuidv4(),
+  //     user: "Tanya Fox",
+  //   },
+  //   {
+  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
+  //     ozoneMate: 5,
+  //     online: 6,
+  //     offline: 7,
+  //     alert: 0,
+  //     id: uuidv4(),
+  //     user: "Arlene Mccoy",
+  //   },
+  //   {
+  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
+  //     ozoneMate: 5,
+  //     online: 6,
+  //     offline: 7,
+  //     alert: 1,
+  //     id: uuidv4(),
+  //     user: "Arlene Mccoy",
+  //   },
+  //   {
+  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
+  //     ozoneMate: 5,
+  //     online: 6,
+  //     offline: 7,
+  //     alert: 5,
+  //     id: uuidv4(),
+  //     user: "Hellen Schmidt",
+  //   },
+  //   {
+  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
+  //     ozoneMate: 5,
+  //     online: 6,
+  //     offline: 7,
+  //     alert: 0,
+  //     id: uuidv4(),
+  //     user: "Hellen Schmidt",
+  //   },
+  //   {
+  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
+  //     ozoneMate: 5,
+  //     online: 6,
+  //     offline: 7,
+  //     alert: 0,
+  //     id: uuidv4(),
+  //     user: "Hellen Schmidt",
+  //   },
+  // ];
 
   return (
     <div className=" flex  flex-col pb-6 px-3 h-full bg-[#F5F5F5] rounded-b-md  ">
       <div className=" w-full flex  min-h-[104px] pt-8 pb-[18px] pl-[30px] ">
-        <MyCombobox />
+        <MyCombobox filteredByClients={filteredByClients} />
         <div className=" text-left flex items-start ml-[30px]">
           <p className=" text-[20px] font-bold  text-[#656565]">Client</p>
         </div>
@@ -227,7 +268,7 @@ const districtTab = ({ openAddDevicePopup }: any) => {
         </button>
       </div>
       <div className="overflow-scroll space-y-11 flex flex-col items-center rounded-[6px]  pl-[30px] pr-[20px]  custom-scrollbar">
-        {Object.entries(testData).map(([key, value]) => {
+        {Object.entries(allDevices).map(([key, value]) => {
           return (
             <DataCards
               data={{
@@ -239,7 +280,7 @@ const districtTab = ({ openAddDevicePopup }: any) => {
                   return e.status === "offline";
                 }).length,
                 warning: value.filter((e) => {
-                  return e.status === "warning";
+                  return e.isWarning === true;
                 }).length,
                 district: key,
               }}
