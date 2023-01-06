@@ -1,5 +1,5 @@
 import { useState } from "react";
-import DataCards from "./DataCards";
+import DataCards from "./DistrictCard";
 import { v4 as uuidv4 } from "uuid";
 
 type DevicesStatus = {

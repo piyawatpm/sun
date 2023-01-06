@@ -3,7 +3,7 @@ import { CheckIcon } from "@heroicons/react/20/solid";
 import { Fragment, useEffect, useState } from "react";
 
 export default function MyCombobox({ filteredByClients }) {
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState({ id: 0, name: "All" });
   const [query, setQuery] = useState("");
   const people = [
     { id: 0, name: "All" },

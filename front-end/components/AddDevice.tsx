@@ -1,3 +1,8 @@
+import {
+  Autocomplete,
+  LoadScript,
+  useJsApiLoader,
+} from "@react-google-maps/api";
 import { useState } from "react";
 import Minimap from "./Minimap";
 
@@ -5,11 +10,29 @@ type AddDeviceProps = {
   closeAddDevicePopup: () => void;
 };
 const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: "AIzaSyCTd-4w5z5_-dQtt6U1_dK-lWXRQVSjgGU",
+  });
   const [isMinimapOpen, setIsMinimapOpen] = useState<boolean>(false);
   const openMap = () => {
     setIsMinimapOpen((p) => !p);
   };
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [autocomplete, setAutocomplete] = useState();
+  const onLoad = (autocomplete) => {
+    console.log("autocomplete: ", autocomplete);
+
+    setAutocomplete(autocomplete);
+  };
+  const onPlaceChanged = () => {
+    if (autocomplete !== null) {
+      // @ts-ignores
+      console.log(autocomplete.getPlace());
+    } else {
+      console.log("Autocomplete is not loaded yet!");
+    }
+  };
   return (
     <div className=" z-20    bg-black/[45%] fixed inset-0  items-center justify-center font-bold">
       <div className=" flex items-center justify-center h-full  scale-75 3xl:scale-100">
@@ -77,7 +100,39 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                 </div>
                 <div className=" space-y-[25px]">
                   <h1 className="text-[22px] ">Location Information</h1>
-
+                  <LoadScript
+                    id="script-loader"
+                    googleMapsApiKey="AIzaSyCTd-4w5z5_-dQtt6U1_dK-lWXRQVSjgGU"
+                    libraries={["places"]}
+                    language="en"
+                    region="EN"
+                    version="weekly"
+                  >
+                    <Autocomplete
+                      onLoad={onLoad}
+                      onPlaceChanged={onPlaceChanged}
+                    >
+                      <input
+                        type="text"
+                        placeholder="Customized your placeholder"
+                        style={{
+                          boxSizing: `border-box`,
+                          border: `1px solid transparent`,
+                          width: `500px`,
+                          height: `32px`,
+                          padding: `0 12px`,
+                          borderRadius: `3px`,
+                          boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                          fontSize: `14px`,
+                          outline: `none`,
+                          textOverflow: `ellipses`,
+                          position: "absolute",
+                          left: "50%",
+                          marginLeft: "-120px",
+                        }}
+                      />
+                    </Autocomplete>
+                  </LoadScript>
                   <div className=" text-[#656565] flex text-[20px] space-x-10">
                     <div className=" flex">
                       <h2>NO.</h2>
@@ -202,4 +257,5 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
     </div>
   );
 };
+
 export default AddDevice;

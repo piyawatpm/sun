@@ -1,7 +1,8 @@
-import { Fragment, ReactElement, useState } from "react";
+import { Fragment, ReactElement, useEffect, useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
-import DataCards from "./DataCards";
+import { mockArea } from "../pages";
+import District from "./DistrictCard";
 import DevicesList from "./DevicesList";
 import DistrictList from "./DistrictList";
 import MyCombobox from "./MyCombobox";
@@ -65,16 +66,53 @@ const testData = {
     },
   ],
 };
-const districtTab = ({ openAddDevicePopup }: any) => {
+const districtTab = ({ openAddDevicePopup, map }: any) => {
   const [viewState, setViewState] = useState<View2>("overall");
-  const [isSelectDistrict, setIsSelectDistrict] = useState<string>();
+  const [selectDistrict, setSelectDistrict] = useState<string>();
+  useEffect(() => {
+    map.data.setStyle((feature) => {
+      let color = "white";
+
+      if (feature.getProperty("isSelected")) {
+        color = "#8F8F8F";
+      } else {
+        color = "white";
+      }
+      return /** @type {!google.maps.Data.StyleOptions} */ {
+        fillColor: color,
+        strokeWeight: 3,
+        strokeColor: "#707070",
+      };
+    });
+    map.data.forEach((e) => {
+      if (selectDistrict === e.j.a) {
+        console.log(e);
+        e.setProperty("isSelected", true);
+      } else e.setProperty("isSelected", false);
+    });
+  }, [selectDistrict]);
   const [allDevices, setAllDevices] = useState(testData);
+  const resetMap = () => {
+    map.data.forEach(function (feature) {
+      map.data.remove(feature);
+    });
+  };
   const filteredByClients = (clientName) => {
     console.log(allDevices);
     if (clientName === "All") {
+      resetMap();
+      mockArea.forEach((e) => {
+        map?.data.addGeoJson(e);
+        map.data.setStyle({
+          fillColor: "#FFFFFF",
+          strokeWeight: 3,
+          strokeColor: "#707070",
+        });
+      });
       setAllDevices(testData);
       return;
     }
+    resetMap();
     // @ts-ignore
     setAllDevices((prv) => {
       let newDevice = {};
@@ -83,12 +121,25 @@ const districtTab = ({ openAddDevicePopup }: any) => {
           // console.log(e.client)
           return e.client === clientName;
         });
-        if (result.length >= 1) newDevice[property] = result;
+        if (result.length >= 1) {
+          mockArea.forEach((e) => {
+            if (e.a === property) {
+              map?.data.addGeoJson(e);
+              map.data.setStyle({
+                fillColor: "#FFFFFF",
+                strokeWeight: 3,
+                strokeColor: "#707070",
+              });
+            }
+          });
+          newDevice[property] = result;
+        }
       }
       console.log(newDevice);
       return newDevice;
     });
   };
+
   // const changeToDevicesList = () => {
   //   setViewState("DevicesView");
   // };
@@ -250,7 +301,22 @@ const districtTab = ({ openAddDevicePopup }: any) => {
   //     user: "Hellen Schmidt",
   //   },
   // ];
+  // useEffect(() => {
+  //   if (map) {
+  // mockArea.forEach((e) => {
+  //   map?.data.addGeoJson(e);
+  // });
 
+  //     var marker = new google.maps.Marker({
+  //       position: {
+  //         lng: 2.40033936500561,
+  //         lat: 48.8777471008302,
+  //       },
+  //       map: map,
+  //       // icon: './alert.png',
+  //     });
+  //   }
+  // }, []);
   return (
     <div className=" flex  flex-col pb-6 px-3 h-full bg-[#F5F5F5] rounded-b-md  ">
       <div className=" w-full flex  min-h-[104px] pt-8 pb-[18px] pl-[30px] ">
@@ -258,7 +324,16 @@ const districtTab = ({ openAddDevicePopup }: any) => {
         <div className=" text-left flex items-start ml-[30px]">
           <p className=" text-[20px] font-bold  text-[#656565]">Client</p>
         </div>
-
+        <button
+          onClick={() => {
+            map.data.forEach((feature) => {
+              console.log(feature.getProperty("isSelected"));
+            });
+          }}
+          className=" p-5 bg-red-500"
+        >
+          test
+        </button>
         <button
           onClick={openAddDevicePopup}
           className=" ml-auto flex items-center justify-center w-[136px] h-[54px] space-x-3 styled"
@@ -267,10 +342,13 @@ const districtTab = ({ openAddDevicePopup }: any) => {
           <img src="/images/machine.png" className="w-[27px] h-[35px]" alt="" />
         </button>
       </div>
-      <div className="overflow-scroll space-y-11 flex flex-col items-center rounded-[6px]  pl-[30px] pr-[20px]  custom-scrollbar">
+      <div className="overflow-scroll h-full space-y-11 flex flex-col items-center rounded-[6px]  pl-[30px] pr-[20px]  custom-scrollbar">
         {Object.entries(allDevices).map(([key, value]) => {
           return (
-            <DataCards
+            <District
+              key={key}
+              selectDistrict={selectDistrict}
+              setSelectDistrict={setSelectDistrict}
               data={{
                 ozoneMate: value.length,
                 online: value.filter((e) => {
@@ -283,6 +361,7 @@ const districtTab = ({ openAddDevicePopup }: any) => {
                   return e.isWarning === true;
                 }).length,
                 district: key,
+                id: key,
               }}
               // isSelected={isSelectDistrict}
               // setSelected={setIsSelectDistrict}

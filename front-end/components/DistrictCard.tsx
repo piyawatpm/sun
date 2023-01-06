@@ -1,27 +1,27 @@
-type DataCardsProps = {
-  setSelected?: any;
-  isSelected?: any;
+type DistrictCardProps = {
+  setSelectDistrict?: any;
+  selectDistrict?: any;
   data: any;
   changeView?: any;
 };
-const DataCards = ({
-  setSelected,
-  isSelected,
+const DistrictCard = ({
+  setSelectDistrict,
+  selectDistrict,
   data,
   changeView,
-}: DataCardsProps) => {
+}: DistrictCardProps) => {
   return (
     <div
       id={data.id}
-      onClick={() => setSelected(data.id)}
+      onClick={() => setSelectDistrict(data.id)}
       onDoubleClick={changeView}
       className={` flex flex-col items-center rounded-[6px] w-full space-y-3 shadow-md ${
-        data.id === isSelected
+        data.id === selectDistrict
           ? "bg-[#B9B9B9]"
           : "bg-[#F5F5F5] border-t-[3px] border-l-[3px] border-white "
       }   shadow-gray-300   p-4 relative`}
     >
-      {data.alert > 0 && (
+      {data.warning > 0 && (
         <img
           src="/images/alert.png"
           className="  absolute top-3  left-0 "
@@ -30,7 +30,7 @@ const DataCards = ({
       )}
       <div
         className={` ${
-          data.alert > 0
+          data.warning > 0
             ? " text-white bg-[#FF0000]  "
             : " text-black bg-[#F5F5F5] shadow-md border-t-[3px] border-l-[3px]  border-white shadow-gray-300"
         }}  px-6 py-3  text-[20px] font-bold overflow-hidden  w-full rounded-[6px] `}
@@ -39,7 +39,7 @@ const DataCards = ({
       </div>
       <div
         className={` flex justify-around w-full font-bold ${
-          data.id === isSelected ? " text-black " : " text-[#707070] "
+          data.id === selectDistrict ? " text-black " : " text-[#707070] "
         }`}
       >
         <div className=" flex items-center space-x-3">
@@ -62,4 +62,4 @@ const DataCards = ({
     </div>
   );
 };
-export default DataCards;
+export default DistrictCard;
