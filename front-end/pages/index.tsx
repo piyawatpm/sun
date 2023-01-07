@@ -1,6 +1,11 @@
 import React, { useState, useCallback, useEffect } from "react";
 import GoogleMapReact from "google-map-react";
-import { GoogleMap, useJsApiLoader, Autocomplete } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  useJsApiLoader,
+  Autocomplete,
+  Polygon,
+} from "@react-google-maps/api";
 
 import Interface from "../components/Interface";
 import Time from "../components/Time";
@@ -14,7 +19,46 @@ import DeviceDashboard from "../components/DeviceDashboard";
 type HomeProps = {
   isLoggedin: boolean;
 };
-
+const allMap = {
+  type: "FeatureCollection",
+  crs: { type: "name", properties: { name: "EPSG:4326" } },
+  features: [
+    {
+      type: "Feature",
+      properties: {
+        id_0: 79,
+        iso: "FRA",
+        name_0: "France",
+        id_1: 4,
+        name_1: "Île-de-France",
+        id_2: 14,
+        name_2: "Paris",
+        id_3: 62,
+        name_3: "Paris, 19e arrondissement",
+        id_4: 536,
+        name_4: "Paris, 19e arrondissement",
+        id_5: 4752,
+        name_5: "Paris, 19e arrondissement",
+        type_5: "Chef-lieu canton",
+        engtype_5: "Commune",
+        pk: "4752",
+      },
+      geometry: {
+        type: "MultiPolygon",
+        coordinates: [
+          [
+            [
+              [25.774252, -82.190262],
+              [17.466465, -65.118292],
+              [34.321384, -63.75737],
+              [25.774252, -82.190262],
+            ],
+          ],
+        ],
+      },
+    },
+  ],
+};
 export const mockArea = [
   {
     a: "area1",
@@ -174,6 +218,7 @@ export const mockArea = [
 ];
 export const mockDevices = [
   {
+    group: "g1",
     deviceId: 1,
     status: "online",
     cellHours: 1075,
@@ -184,6 +229,7 @@ export const mockDevices = [
     isMaintencence: false,
   },
   {
+    group: "g1",
     deviceId: 2,
     status: "offline",
     cellHours: 1453,
@@ -194,6 +240,7 @@ export const mockDevices = [
     isMaintencence: false,
   },
   {
+    group: "g2",
     deviceId: 3,
     status: "online",
     cellHours: 5012,
@@ -204,6 +251,7 @@ export const mockDevices = [
     isMaintencence: false,
   },
   {
+    group: "g3",
     deviceId: 4,
     status: "offline",
     cellHours: 1661,
@@ -214,6 +262,7 @@ export const mockDevices = [
     isMaintencence: true,
   },
   {
+    group: "g4",
     deviceId: 5,
     status: "offline",
     cellHours: 60220,
@@ -226,63 +275,79 @@ export const mockDevices = [
 export const mockDistrict = ["area1", "area2", "area3"];
 export const filterDistrict = (deviceArr = {}, districtArr = {}) => {
   return {
-    area1: [
-      {
-        deviceId: 1,
-        status: "online",
-        cellHours: 1075,
-        oxyHours: 2012,
-        district: "area1",
-        client: "client1",
-        isWarning: true,
-        isMaintencence: false,
-      },
-      {
-        deviceId: 2,
-        status: "offline",
-        cellHours: 1453,
-        oxyHours: 3042,
-        district: "area1",
-        client: "client1",
-        isWarning: false,
-        isMaintencence: false,
-      },
-    ],
-    area2: [
-      {
-        deviceId: 3,
-        status: "online",
-        cellHours: 5012,
-        oxyHours: 1053,
-        district: "area2",
-        client: "client2",
-        isWarning: false,
-        isMaintencence: false,
-      },
-    ],
-    area3: [
-      {
-        deviceId: 4,
-        status: "offline",
-        cellHours: 1661,
-        oxyHours: 3212,
-        district: "area3",
-        client: "client3",
-        isWarning: false,
-        isMaintencence: true,
-      },
-      {
-        deviceId: 5,
-        status: "offline",
-        cellHours: 60220,
-        oxyHours: 2240,
-        district: "area3",
-        client: "client4",
-        isWarning: true,
-      },
-    ],
+    area1: {
+      g1: [
+        {
+          group: "g1",
+          deviceId: 1,
+          status: "online",
+          cellHours: 1075,
+          oxyHours: 2012,
+          district: "area1",
+          client: "client1",
+          isWarning: true,
+          isMaintencence: false,
+        },
+        {
+          group: "g1",
+          deviceId: 2,
+          status: "offline",
+          cellHours: 1453,
+          oxyHours: 3042,
+          district: "area1",
+          client: "client1",
+          isWarning: false,
+          isMaintencence: false,
+        },
+      ],
+    },
+
+    area2: {
+      g2: [
+        {
+          group: "g2",
+          deviceId: 3,
+          status: "online",
+          cellHours: 5012,
+          oxyHours: 1053,
+          district: "area2",
+          client: "client2",
+          isWarning: false,
+          isMaintencence: false,
+        },
+      ],
+    },
+
+    area3: {
+      g3: [
+        {
+          group: "g3",
+          deviceId: 4,
+          status: "offline",
+          cellHours: 1661,
+          oxyHours: 3212,
+          district: "area3",
+          client: "client3",
+          isWarning: false,
+          isMaintencence: true,
+        },
+      ],
+      g4: [
+        {
+          group: "g4",
+          deviceId: 5,
+          status: "offline",
+          cellHours: 60220,
+          oxyHours: 2240,
+          district: "area3",
+          client: "client4",
+          isWarning: true,
+        },
+      ],
+    },
   };
 };
+
 export default function Home({ isLoggedin }: HomeProps) {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -291,7 +356,7 @@ export default function Home({ isLoggedin }: HomeProps) {
   const [map, setMap] = useState(null);
   const onLoad = useCallback(function callback(map) {
     // This is just an example of getting and using the map instance!!! don't just blindly copy!
-    map.setZoom(12)
+    map.setZoom(12);
 
     setMap(map);
   }, []);
@@ -357,7 +422,7 @@ export default function Home({ isLoggedin }: HomeProps) {
         {isAddDevice && <AddDevice closeAddDevicePopup={closeAddDevicePopup} />}
         <button
           onClick={() => {
-            console.log(map);
+            map?.data.addGeoJson(allMap);
           }}
           className=" absolute top-0 left-0 bg-white z-10 mt-2 ml-2 rounded-full p-2 px-3 font-extrabold"
         >
@@ -369,12 +434,35 @@ export default function Home({ isLoggedin }: HomeProps) {
             mapContainerStyle={containerStyle}
             center={center}
             // zoom={10}
-
+            // options={{
+            //   styles: [{ stylers: [{ saturation: 50 }, { gamma: 0.5 }] }],
+            // }}
             onLoad={onLoad}
             onUnmount={onUnmount}
           >
             {/* Child components, such as markers, info windows, etc. */}
-            <></>
+
+            {/* <Polygon
+              onLoad={onLoad}
+              paths={[
+                { lat: 25.774, lng: -80.19 },
+                { lat: 18.466, lng: -66.118 },
+                { lat: 32.321, lng: -64.757 },
+                { lat: 25.774, lng: -80.19 },
+              ]}
+              options={{
+                fillColor: "lightblue",
+                fillOpacity: 1,
+                strokeColor: "red",
+                strokeOpacity: 1,
+                strokeWeight: 2,
+                clickable: false,
+                draggable: false,
+                editable: false,
+                geodesic: false,
+                zIndex: 1,
+              }}
+            /> */}
           </GoogleMap>
         )}
 

@@ -2,19 +2,19 @@ type DistrictCardProps = {
   setSelectDistrict?: any;
   selectDistrict?: any;
   data: any;
-  changeView?: any;
+  selectedDistrict: any;
 };
 const DistrictCard = ({
   setSelectDistrict,
   selectDistrict,
   data,
-  changeView,
+  selectedDistrict,
 }: DistrictCardProps) => {
   return (
     <div
       id={data.id}
       onClick={() => setSelectDistrict(data.id)}
-      onDoubleClick={changeView}
+      onDoubleClick={() => selectedDistrict(data.district)}
       className={` flex flex-col items-center rounded-[6px] w-full space-y-3 shadow-md ${
         data.id === selectDistrict
           ? "bg-[#B9B9B9]"
