@@ -81,6 +81,7 @@ const testData = {
     ],
   },
 };
+
 const districtTab = ({ openAddDevicePopup, map }: any) => {
   const [viewState, setViewState] = useState<View>("overall");
   const [selectDistrict, setSelectDistrict] = useState<string>();
@@ -162,7 +163,6 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
       return newDevice;
     });
   };
-
 
   // const changeToDevicesList = () => {
   //   setViewState("DevicesView");
@@ -363,7 +363,6 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
         }).length;
       }
     }
-
     return TotalProperty;
   };
   const selectedDistrict = (district) => {
@@ -380,28 +379,37 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
   }, [viewState]);
   return (
     <div className=" flex  flex-col pb-6 px-3 h-full bg-[#F5F5F5] rounded-b-md  ">
-      <div className=" w-full flex  min-h-[104px] pt-8 pb-[18px] pl-[30px] ">
-        <MyCombobox filteredByClients={filteredByClients} />
-        <div className=" text-left flex items-start ml-[30px]">
-          <p className=" text-[20px] font-bold  text-[#656565]">Client</p>
-        </div>
-        <button
-          onClick={() => {
-            map.data.forEach((feature) => {
-              console.log(feature.getProperty("isSelected"));
-            });
-          }}
-          className=" p-5 bg-red-500"
-        >
-          test
-        </button>
-        <button
-          onClick={openAddDevicePopup}
-          className=" ml-auto flex items-center justify-center w-[136px] h-[54px] space-x-3 styled"
-        >
-          <img src="/images/add.png" alt="" />
-          <img src="/images/machine.png" className="w-[27px] h-[35px]" alt="" />
-        </button>
+      <div className=" w-full flex  min-h-[104px] pt-8 pb-[18px] pl-[30px]  ">
+        {viewState === "overall" ? (
+          <>
+            <MyCombobox filteredByClients={filteredByClients} />
+            <div className=" text-left flex items-start ml-[30px]">
+              <p className=" text-[20px] font-bold  text-[#656565]">Client</p>
+            </div>
+            <button
+              onClick={openAddDevicePopup}
+              className=" ml-auto flex items-center justify-center w-[136px] h-[54px] space-x-3 styled"
+            >
+              <img src="/images/add.png" alt="" />
+              <img
+                src="/images/machine.png"
+                className="w-[27px] h-[35px]"
+                alt=""
+              />
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={() => {
+                setViewState("overall");
+              }}
+              className=" styled w-11 h-11"
+            >
+              <img src="/images/left2.png" className=" mx-auto my-auto" alt="" />
+            </button>
+          </>
+        )}
       </div>
       <div className="overflow-scroll h-full space-y-11 flex flex-col items-center rounded-[6px]  pl-[30px] pr-[20px]  custom-scrollbar">
         {viewState === "overall" ? (
