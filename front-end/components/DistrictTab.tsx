@@ -145,19 +145,18 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
           if (result.length >= 1) {
             newDistrict[property2] = result;
             newDevice[property] = { ...newDistrict };
-          }
-        }
-
-        mockArea.forEach((e) => {
-          if (e.a === property) {
-            map?.data.addGeoJson(e);
-            map.data.setStyle({
-              fillColor: "#FFFFFF",
-              strokeWeight: 3,
-              strokeColor: "#707070",
+            mockArea.forEach((e) => {
+              if (e.a === property) {
+                map?.data.addGeoJson(e);
+                map.data.setStyle({
+                  fillColor: "#FFFFFF",
+                  strokeWeight: 3,
+                  strokeColor: "#707070",
+                });
+              }
             });
           }
-        });
+        }
       }
       console.log(newDevice);
       return newDevice;
@@ -406,7 +405,11 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
               }}
               className=" styled w-11 h-11"
             >
-              <img src="/images/left2.png" className=" mx-auto my-auto" alt="" />
+              <img
+                src="/images/left2.png"
+                className=" mx-auto my-auto"
+                alt=""
+              />
             </button>
           </>
         )}
