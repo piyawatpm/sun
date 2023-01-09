@@ -97,6 +97,7 @@ const DevicesList = ({ changeToDistrictList }) => {
           return (
             <DataCards
               data={data}
+              // @ts-ignore
               isSelected={isSelectDevices}
               setSelected={setIsSelectDevices}
             />
