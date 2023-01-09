@@ -1,11 +1,14 @@
+import { useState } from "react";
 import {
   buildStyles,
   CircularProgressbar,
   CircularProgressbarWithChildren,
 } from "react-circular-progressbar";
+export type InfoState = "RH" | "CT" | "OT";
 const DeviceDashboard = () => {
+  const [infoState, setInfoState] = useState<InfoState>();
   return (
-    <div className=" flex flex-col px-[35px] h-full justify-between">
+    <div className=" flex flex-col px-[35px] h-full justify-between text-[#636363]">
       <div className=" justify-around px-[12px] flex w-[656px] h-[226px] bg-[#F5F5F5] shadow-md   border-white shadow-gray-300 border-t-[2px] border-l-[2px] rounded-[6px]">
         <div className=" flex flex-col justify-center">
           <p className=" text-[24px] font-bold text-[##636363]">Cell</p>
@@ -443,7 +446,52 @@ const DeviceDashboard = () => {
         </div>
       </div>
 
-      <div className=" flex w-[656px] h-[226px] bg-[#F5F5F5] shadow-md   border-white shadow-gray-300 border-t-[3px] border-l-[3px] rounded-[6px]"></div>
+      <div className=" p-[25px]  flex flex-col w-[656px] h-[226px] bg-[#F5F5F5] shadow-md  border-white shadow-gray-300 border-t-[3px] border-l-[3px] rounded-[6px]">
+        <div className=" flex justify-between px-[20px] w-full">
+          <button
+            onClick={() => {
+              setInfoState("RH");
+            }}
+            className={` ${
+              infoState === "RH"
+                ? " text-white bg-[#515151]"
+                : "  text-black/30 bg-[#F5F5F5]"
+            } w-[164px] h-[44px]  shadow-md  border-white shadow-gray-300 border-t-[3px] border-l-[3px] rounded-[6px] text-[14px] font-bold flex justify-center items-center`}
+          >
+            RSU hreshold
+          </button>
+          <button
+            onClick={() => {
+              setInfoState("CT");
+            }}
+            className={` ${
+              infoState === "CT"
+                ? " text-white bg-[#515151]"
+                : "  text-black/30 bg-[#F5F5F5]"
+            } w-[164px] h-[44px]  shadow-md  border-white shadow-gray-300 border-t-[3px] border-l-[3px] rounded-[6px] text-[14px] font-bold flex justify-center items-center`}
+          >
+            Cell Threshold
+          </button>
+          <button
+            onClick={() => {
+              setInfoState("OT");
+            }}
+            className={` ${
+              infoState === "OT"
+                ? " text-white bg-[#515151]"
+                : "  text-black/30 bg-[#F5F5F5]"
+            } w-[164px] h-[44px]  shadow-md  border-white shadow-gray-300 border-t-[3px] border-l-[3px] rounded-[6px] text-[14px] font-bold flex justify-center items-center`}
+          >
+            Oxygen Threshold
+          </button>
+        </div>
+        <div className=" flex  px-[20px] h-full">
+          <div className=" flex flex-col justify-center items-center mt-[17px]">
+            <p className=" text-[20px] font-bold"> Current</p>
+            <img src="/images/thunder.png" className=" max-w-[23px] max-h-[31px]" alt="" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
