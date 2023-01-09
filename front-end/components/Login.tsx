@@ -22,18 +22,18 @@ const Login = ({ login }: { login: any }) => {
     try {
       const { username, password } = loginDetails;
       const res = await api.post(
-        "https://ozonemate.cloudtronics.com.au/auth/token/login/",
+        `http://103.170.142.47:8000/auth/token/login/`,
         {
           username,
           password,
         }
       );
       login(true);
-      
+
       console.log("res = ", res.data);
-      const { token } = res.data;
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      setCookie("userToken", token);
+      const { auth_token } = res.data;
+      axios.defaults.headers.common["Authorization"] = `Token ${auth_token}`;
+      setCookie("userToken", auth_token);
       alert("success");
     } catch (error) {
       console.log("error : ", error);

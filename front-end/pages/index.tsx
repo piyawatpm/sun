@@ -15,50 +15,12 @@ import Login from "../components/Login";
 import { GetServerSidePropsContext } from "next";
 import { getCookieFromServer } from "../utils/cookie";
 import ManageDevices from "../components/ManageDevices";
-
+import { api } from "../lib/axios";
+import useSWR from "swr";
 type HomeProps = {
   isLoggedin: boolean;
 };
-const allMap = {
-  type: "FeatureCollection",
-  crs: { type: "name", properties: { name: "EPSG:4326" } },
-  features: [
-    {
-      type: "Feature",
-      properties: {
-        id_0: 79,
-        iso: "FRA",
-        name_0: "France",
-        id_1: 4,
-        name_1: "Île-de-France",
-        id_2: 14,
-        name_2: "Paris",
-        id_3: 62,
-        name_3: "Paris, 19e arrondissement",
-        id_4: 536,
-        name_4: "Paris, 19e arrondissement",
-        id_5: 4752,
-        name_5: "Paris, 19e arrondissement",
-        type_5: "Chef-lieu canton",
-        engtype_5: "Commune",
-        pk: "4752",
-      },
-      geometry: {
-        type: "MultiPolygon",
-        coordinates: [
-          [
-            [
-              [25.774252, -82.190262],
-              [17.466465, -65.118292],
-              [34.321384, -63.75737],
-              [25.774252, -82.190262],
-            ],
-          ],
-        ],
-      },
-    },
-  ],
-};
+
 export const mockArea = [
   {
     a: "area1",
@@ -272,6 +234,122 @@ export const mockDevices = [
     isWarning: true,
   },
 ];
+const mockArea2 = [
+  {
+    id: 1,
+    name: "arrondissement",
+    geoJson: {
+      crs: {
+        type: "name",
+        properties: {
+          name: "EPSG:4326",
+        },
+      },
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: {
+            type: "MultiPolygon",
+            coordinates: [
+              [
+                [
+                  [2.39865112304693, 48.8894157409669],
+                  [2.40033936500561, 48.8837471008302],
+                  [2.41069436073315, 48.878475189209],
+                  [2.37701272964483, 48.8719177246094],
+                  [2.36929440498352, 48.8833274841309],
+                  [2.36467361450207, 48.8842926025391],
+                  [2.37127304077148, 48.8956298828126],
+                  [2.37028646469111, 48.901653289795],
+                  [2.3894443511964, 48.9011573791503],
+                  [2.39649963378906, 48.8961944580079],
+                  [2.39865112304693, 48.8894157409669],
+                ],
+              ],
+            ],
+          },
+          properties: {
+            pk: "4752",
+            iso: "FRA",
+            id_0: 79,
+            id_1: 4,
+            id_2: 14,
+            id_3: 62,
+            id_4: 536,
+            id_5: 4752,
+            name_0: "France",
+            name_1: "Île-de-France",
+            name_2: "Paris",
+            name_3: "Paris, 19e arrondissement",
+            name_4: "Paris, 19e arrondissement",
+            name_5: "Paris, 19e arrondissement",
+            type_5: "Chef-lieu canton",
+            engtype_5: "Commune",
+          },
+        },
+      ],
+    },
+  },
+  {
+    id: 2,
+    name: "Cognat-Lyonne",
+    geoJson: {
+      crs: {
+        type: "name",
+        properties: {
+          name: "EPSG:4326",
+        },
+      },
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: {
+            type: "MultiPolygon",
+            coordinates: [
+              [
+                [
+                  [3.25863409042353, 46.1001014709473],
+                  [3.25985240936279, 46.103199005127],
+                  [3.27181982994085, 46.1174240112306],
+                  [3.27976512908941, 46.1214752197267],
+                  [3.28750967979431, 46.1240653991699],
+                  [3.29444074630743, 46.1197624206544],
+                  [3.32123637199408, 46.1136741638184],
+                  [3.34011745452887, 46.1141586303712],
+                  [3.3400382995606, 46.101390838623],
+                  [3.32621073722845, 46.1031875610352],
+                  [3.31727409362804, 46.0957374572754],
+                  [3.27249145507824, 46.0962409973145],
+                  [3.25863409042353, 46.1001014709473],
+                ],
+              ],
+            ],
+          },
+          properties: {
+            pk: "3433",
+            iso: "FRA",
+            id_0: 79,
+            id_1: 3,
+            id_2: 8,
+            id_3: 35,
+            id_4: 325,
+            id_5: 3433,
+            name_0: "France",
+            name_1: "Auvergne",
+            name_2: "Allier",
+            name_3: "Vichy",
+            name_4: "Escurolles",
+            name_5: "Cognat-Lyonne",
+            type_5: "Commune simple",
+            engtype_5: "Commune",
+          },
+        },
+      ],
+    },
+  },
+];
 export const mockDistrict = ["area1", "area2", "area3"];
 export const filterDistrict = (deviceArr = {}, districtArr = {}) => {
   return {
@@ -349,6 +427,10 @@ export const filterDistrict = (deviceArr = {}, districtArr = {}) => {
 };
 
 export default function Home({ isLoggedin }: HomeProps) {
+  const address = `http://103.170.142.47:8000/api/v1/location`;
+  const fetcher = async (url) => await api.get(url).then((res) => res.data);
+  const { data, error } = useSWR(address, fetcher);
+  console.log(data);
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: "AIzaSyCTd-4w5z5_-dQtt6U1_dK-lWXRQVSjgGU",
@@ -388,16 +470,18 @@ export default function Home({ isLoggedin }: HomeProps) {
   };
   useEffect(() => {
     if (map && isLoaded) {
-      mockArea.forEach((e) => {
-        const feature = map?.data.addGeoJson(e);
-        console.log(feature);
-        // feature.addProperty("district", e.a);
-      });
-      map.data.setStyle({
-        fillColor: "#FFFFFF",
-        strokeWeight: 3,
-        strokeColor: "#707070",
-      });
+        console.log(data)
+        mockArea.forEach((e) => {
+          const feature = map?.data.addGeoJson(e);
+          console.log(feature);
+          // feature.addProperty("district", e.a);
+        });
+        map.data.setStyle({
+          fillColor: "#FFFFFF",
+          strokeWeight: 3,
+          strokeColor: "#707070",
+        });
+      
 
       // var marker = new google.maps.Marker({
       //   position: {

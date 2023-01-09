@@ -7,7 +7,7 @@ const authRequestInterceptor = (config: AxiosRequestConfig) => {
 
   let headers: any = {};
   if (token != null) {
-    headers.authorization = `Bearer ${token}`;
+    headers.authorization = `Token ${token}`;
   }
 
   return { ...config, headers };
