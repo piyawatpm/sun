@@ -14,7 +14,7 @@ import AddDevice from "../components/AddDevice";
 import Login from "../components/Login";
 import { GetServerSidePropsContext } from "next";
 import { getCookieFromServer } from "../utils/cookie";
-import DeviceDashboard from "../components/DeviceDashboard";
+import ManageDevices from "../components/ManageDevices";
 
 type HomeProps = {
   isLoggedin: boolean;
@@ -355,7 +355,6 @@ export default function Home({ isLoggedin }: HomeProps) {
   });
   const [map, setMap] = useState(null);
   const onLoad = useCallback(function callback(map) {
-    // This is just an example of getting and using the map instance!!! don't just blindly copy!
     map.setZoom(12);
 
     setMap(map);
@@ -422,13 +421,13 @@ export default function Home({ isLoggedin }: HomeProps) {
         {isAddDevice && <AddDevice closeAddDevicePopup={closeAddDevicePopup} />}
         <button
           onClick={() => {
-            map?.data.addGeoJson(allMap);
+            setIsDashboardOpen((p) => !p);
           }}
           className=" absolute top-0 left-0 bg-white z-10 mt-2 ml-2 rounded-full p-2 px-3 font-extrabold"
         >
           Dashboard Toggle
         </button>
-        {isDashboardOpen && <DeviceDashboard />}
+        {isDashboardOpen && <ManageDevices />}
         {isLoaded && (
           <GoogleMap
             mapContainerStyle={containerStyle}

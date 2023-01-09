@@ -7,7 +7,40 @@
 *{
     font-family: 'Montserrat', sans-serif;
 }
+.active-card{
+  --tw-drop-shadow: drop-shadow(-3px -3px 6px white);
 
+  border-radius: 0.375rem/* 6px */;
+  border-top-width: 3px;
+  border-left-width: 3px;
+  border-color: white;
+  background-color: #F5F5F5;
+  border-radius: 0.375rem/* 6px */;
+  box-shadow: inset 2.5px 2.5px 2px rgba(0, 0, 0, 0.058);
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-bottom-width: 3px;
+  border-right-width: 3px;
+  border-color: white;
+  background-color: #F5F5F5;
+}
+.active-card-small{
+  --tw-drop-shadow: drop-shadow(-3px -3px 6px white);
+
+  border-radius: 0.375rem/* 6px */;
+  border-top-width: 3px;
+  border-left-width: 3px;
+  border-color: white;
+  background-color: #F5F5F5;
+  border-radius: 0.375rem/* 6px */;
+  box-shadow: inset 2.5px 2.5px 2px rgba(0, 0, 0, 0.227);
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+  border-color: white;
+  background-color: #F5F5F5;
+}
 button.styled{
   --tw-drop-shadow: drop-shadow(-3px -3px 6px white);
     filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
@@ -39,7 +72,12 @@ button.styled:active{
 .custom-scrollbar::-webkit-scrollbar {
     width: 44px;
   }
+  .custom-scrollbar.samll::-webkit-scrollbar {
+    width: 30px;
+  }
 
+ 
+ 
   .custom-scrollbar::-webkit-scrollbar-track {
     background: #F5F5F5;
   }
@@ -54,7 +92,9 @@ button.styled:active{
     border-radius: 6px;
     padding-top: 10px;
     margin-top: 50px;
+  
   }
+
   .custom-scrollbar::-webkit-scrollbar-track-piece:vertical{
     background: linear-gradient(
     to right,
@@ -82,14 +122,13 @@ button.styled:active{
     background-size: cover;
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAYAAAAehFoBAAAABHNCSVQICAgIfAhkiAAABAJJREFUWEftmV1IU2EYx8++LLPMXAmhi74WVszMyilj6KRRFkTQpVA3Wtht4K3SRRfSRRdBiQreCIL34pUoiKRXoaBbY2yiuTn2oe3765z+z2GzJaZzZ4eO4At/ztm79z3nt/+e8/E+j4zJaRzH6fCxCboClUNySJZR7lCh+xwOQGKhFJSAolAI2oZ8kAvagDwymSySPSHBMAA9gc0ryABVQmVQCaQQSnbA/CxwEuPiUBgKQG7ICTmgnxlo+iG8ewT8GpuH0CXoPFQKqSByWMyWdTmNk5DTcbCE4egmy7I/sP9doVAsZaAD5LQMnXXoeAfVEnAikahKpVJig+Zlglwud6XT6R7oW3l5uReTggTchZ1n0M14PH4VX/KuS6itejye5yqVaq26upoH/gA4utBqI5HIRQmB8ijgYywWixH/uk2v128T8Gf010M3AHxBasDEs7CwYPb7/RaDwRAg4C8ZYC2A1VIEnpube4ywsNTX1/sI+Csg70CSBZ6dnX3i9XqXjxTwxsbGSmNjo/fIOHwMLObFSjEsqsPr6+s8f01NTVF+h6jA8/PzzOjoKA/a0dHB4GYvGFo04FzYLGUxoEUB3gu2WNBFB94NS65Sy4aG0PAoKvBesNm43e+7wwR20YDzAcpnzEHwRQE+DMhhxu4FLxi4EIBC5mThBQELOXGhcwsGXlxcZIaGhnb+tULusbuhOzs7mbo6Wlb+uxUMPDg4yCwt0SJW2FMsF1qn0zFdXbSsFAGY3hGmp6f5x61Wqz3o4t73e5vNxhB4a2vrge8cBTssiFDA5GNgAeblNfXIOyz5Zf5uhymRcheiRAolAiXXZmZmaIm03NzczOclPmWAKVVVJTlaAOFW2u5wOFaMRiO/zO9HXwN0S4q5NTJwamrqkd1ut5hMJt7h9+i7B+kArJGiw5OTk2an02ltaWnhgXsAeZ/CAsDXpQg8MTFhslqttra2Nj8Bv8mEhB7AlGOTXBsbGzMiJOxms5nPXr4AIYE2AdgsOVoADQwMPMBFt9re3v6LgKkQU4uaQkMsFnsrNWBKaPf29t7e2tpyazQaHphKXJdRKriG+kY/Pp+TEjSYlru7u5+iOOPHG2KIgE8BkHJKleFwWItKzUf0VWH737kJdnh4+CUeHKtqtTo0MjISy5a9zoLuNIoypW63+wySx2XBYPAkXFeKWaTBsamGwSEcWcCxqGOkEZbJQCAQx7t3FArBxFBFRUUU/bHx8fE/FaOM0yUul0uJgcq1tTUlxvCFRRxMFLsBTHU6BudhYBYbjUZZXPgszEphS/ApVI8SgE4SLI39CwTQBEiSb25uKnw+nyigubEGV3noZDLJwRgO4BzAORRiCJDt6+ujaulO+w06hpfxL/E+oAAAAABJRU5ErkJggg==');
 }
+.custom-scrollbar.small::-webkit-scrollbar-button:single-button:vertical:decrement {
+  height: 44px;
+  width: 44px;
+  background-size: cover;
+  background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABHNCSVQICAgIfAhkiAAAAutJREFUSEvtl8+LEmEYx2eUTXA7BFltq9QhNrZgD1uxdIiyn5t2Wk8d7OrNTmE3jwsJnYy67MHDgv0BKR5EFExBEAppWxXTyB+obOZv1x8zfd9hB2wl9p0Z2lMvfJl3Zp7n+bzzvu887/uyzFThef4ebp9AV6BTEDv9/og6h/djaAQNoA70E/oOfSJiWbYqxhACAziPyyvoEaSF5vBMDUMJXIaHMYFPCBz++/Bvo17lOC6D+89qtTqG+wye8yL4DR5sDIfDhclkooKRFCCVrUqlqiD2i8FgENHpdCUWkPvwfAfopfF4rKKKIt+oUKvVNsD5SsCvEedpv99f/BdfeqiNfCqVuj0ajb4QsB8vr/d6vbPyP4TeM5lMPqjX6zsETAZ8CWAdvbt8y1gs9hjdvUvA8QPwafnh6D3j8bipWq0KY3ys4Gg0ai6Xy//BdGOFici43W7B2G63M1otSXZ0RXZXi9BSqSSQ9Hq9JLgs8DR0bW1NACcSCUlwyeDDUKvVKoC3t7clwSWB/wYVR1UKnBp8FFQqfBocQxK5jEViJnPRQqXAI5GIWcxcHw/AM7m6WCwyLpeLMRqNjMViofpfxG53OByMwWCY8SFgZC5hkYjg7fJxrU7hcNiUz+eFlBkE+CrA56k+SaFRKBRaz+Vywur0AbFWAL6gMCaVeyAQeFgoFNIE/B66hsm1ROWp0Mjv999Np9NZAn4L3QR4VWFMKnev13vrGwoBv4THHXS1icpTodHW1taNTCZTIOB17HvN2HY+VxiTxp1zOp0rjUbjBwGfw37XjO3tJuoLNN5ybcDYsdlsJmz2yuKGfrnb7a5ih7+JoBchSUcIioZwgO56PJ5nPp8vFwwGmyKY3dvbW2y322eQzk7CSAPNoSeoGwBbchTiMWwEQi7jZrM5arVa+1i7e5VKpYvd5S8CJQ39I3A2m9WgG+ZhpMGYnyAGCEIFB1g493Q6HZ7U8ZdwmLAc4EPUh5jIfWQtcqgTym8FEHkmyPxCCgAAAABJRU5ErkJggg==')
+}
 
-/* ::-webkit-scrollbar-button:single-button:vertical:decrement:hover {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='rgb(112, 112, 112)'><polygon points='50,00 0,50 100,50'/></svg>");
-} */
-
-/* ::-webkit-scrollbar-button:single-button:vertical:decrement:active {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='rgb(128, 128, 128)'><polygon points='50,00 0,50 100,50'/></svg>");
-} */
 
 /* Down */
 .custom-scrollbar::-webkit-scrollbar-button:single-button:vertical:increment {
@@ -99,8 +138,16 @@ button.styled:active{
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAYAAAAehFoBAAAABHNCSVQICAgIfAhkiAAABBBJREFUWEftmV9IU1Ecx8/+WJll5koINfq3sGK2rPyDDP/QqBVE0KNQL1rYa+Cr0kMP0kMPQYkKvgiC7+KTKIikT6GgsyEqmttkfzT3/8+9fX+XzZY4N+/dpSt44Mvdzs4957PvfufsnvNTsZTC87wBb2uhq1AhpIZUCaU2lfqaRwckDopBESgI+aBtyA3ZoQ1oU6VSBZIDEgwD6ElcXkP1UDFUAJ2ANFLJMtyfBI6iXRjyQ17IAa1Ay9CvBDR9EcE9An6DyyPoMnQByofyIHJYzpJ0OY5ByOkwWPxw1Mlx3E+8/qHRaOYS0F5yWoXKSlS8hyoIOBKJlMRiMblBszJBrVbb4/F4B/S9sLDQhZt2CLgNL55Dt8Lh8DV8KLiuoLK6ubn5Ii8vb620tFQA/gg4mmgVgUDgkoJABRTwMavVasKvbqupqdkm4C+oN0I3AXxRacDEMzMzY/Z4PNb6+novAX9NAOsBrFMi8NTU1BOEhdVoNLoJ+Bsg70KKBZ6cnHzqcrnmjxTwxsbGQnV1tevIOHwMLOdkpRg+dvjY4RQHjkNCznCgvkU7vL6+zsbHxxkeQpher5fEabPZ2PT0NGtsbGRlZWUH9iUauLe3l83N0fM0Yy0tLQK4mEKgg4ODwq0Gg4G1tdETbvoiGnh2dpb19fXt9iwGOhWWOmptbWWVlbSHkAGYutw74GGgxd4r2uGkB2IGFnNPcjzJwId1WgqspFVib5RlA5JNm0wTNycOZxMeuYDNqcMHQdNnyaVL6jKYU4fTQaf+zIdZSfYLD1mA95uIUp3N6SqRbqKkxq1UZ9MB53ybT88cVDI9I2RaHdIB00HKPYgOUuggUHFlYmKCtkjzdXV1wrnE5wQwHVWVKI4WQHhCtCwvLy+YTCZhm9+NuirothLP1sjAsbGxx0tLS9ampibB4Q+ouw8ZAFyuRIdHR0fNKysriw0NDQJwByAfUFgA+IYSgUdGRpoWFxdtzc3NHgJ+mwiJGgDTGZviytDQkAkhsWQ2m4XTy5cgJNBaAJsVRwugnp6eh5h0qxaL5TcBUyKmAjmFqlAo9E5pwHSg3dnZeWdra8tRXl4uAFOK6wpSBdeR3+jG+/NKggbTfHt7+zMkZzzY+PoI+DQAadta7Pf79cjUfEJdCa7/nZtg+/v7X+GPY1Wn0/kGBgZCybTXOdCdQVIm3+FwnMXhccHOzs4puK6VM0mDvimHwSMcOcBxyGPEEZZRr9cbxt97EPLBRF9RUVEQ9aHh4eG/GaOE0yfsdrsWDbVra2tatBESi+hMFrsBTHk6hnEYzOKCwSCHic/BrBiuBB9D9igC6CjBUtt/QABNgCS10+nUuN1uWUBTYw2uCtDRaJSHMTzAeYDzSMQQINfV1UXZ0t3yBx2zl/GmEpD/AAAAAElFTkSuQmCC');
 }
 
+.custom-scrollbar.small::-webkit-scrollbar-button:single-button:vertical:increment {
+  height: 44px;
+  width: 44px;
+  background-size: cover;
+  background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABHNCSVQICAgIfAhkiAAAAvdJREFUSEvtl8+LEmEYx2eUTXA7BFltHuoQG1vgYSukQxT93LTT3jrYdY+eAj15XPDQRaIuHjwI9gekeBBRMAVBKKRtVUwjVFS2zfXn+mOm7zPsgLXb+o5De+qFh3nnnef5fub9Mc/7Ds9NFVEUH+D2Gewa7AyMn34+oy7g+Rg2gg1gHdgP2DfYRzKe5+uyhiQM4CIubtgTmB62gDYtHBVwORHOBJ8QHPH7iG+jXhcEIY/7T1qtNon7PNpFGfwaDevD4XBpMplo4KQEyOSr0Whq0H45GAziBoOhwgPyEJFvAb0yHo81TCrzO5UbjcY6OF8I/Ao6z/v9vvFf9PSPdxSz2ezd0Wj0mcAhPLzZ6/XOz98R9shMJvOo2WxuEZgmfBlgA3v4/J7JZPIphnubwKkD8Nn55dgjU6mUpV6vS3N8ouBEImGtVqv/wYfnyuFwcCaTibPZbEwT6ff7OXwynNtNifBwYR5qEkqn05zZbJ4JZ/FlBuMz4zweD4cFcSxchhqNRs7pdP51dJjBpDALPg212+2cXk/7zNFFEfg4uBIo6SgGHwWnNpp/Gt5ZPZX7Pw1OIolcxSbBlLmmh53ElEDJPx6PW+XM9eEAzJyrZTgJsfZU7jGBsVClTSKOxpWT2p1isZilVCpJKTMC8HWALzJlCJVO0Wh0rVgsSrvTe2iZAL6kUpMpPBwOPy6XyzkCv4PdwOJaZopU6RQKhe7ncrkCgd/AbgO8qlKTKTwQCNz5ikJgByLuYagtTJEqnbxe7618Pl8m8BrOvVYcO+0qNVnCBZfLZdrd3f1O4As471pxvN1EfYklel4fMLY2NjYsOOxV5QP9SrfbXcUJfxOil2GKfiEYXkQAdNvn870IBoPFSCTSksH8zs6Osd1un0M6Ow0nHWwBI8H8AvClXyER00YQuoxbrdZob29vv1Kp9Gq1Wheny58EpRf9TbhQKOgwDItw0mHOT5EDRJjgAEv/PZ1OR6Q6vhIBC1YAfIj6EAu5j6xFP3VS+QWQnnMmu+Zr1QAAAABJRU5ErkJggg==')
+
+}
 .custom-scrollbar::-webkit-scrollbar-track-piece{
     width: 80%;
+
 }
 
 .inner-shadow{
@@ -110,4 +157,76 @@ button.styled:active{
 }
 .inner-shadow2{
   box-shadow: inset 2.5px 2.5px 2px rgba(0, 0, 0, 0.193);
+}
+
+/*
+ * react-circular-progressbar styles
+ * All of the styles in this file are configurable!
+ */
+
+ .CircularProgressbar {
+  /*
+   * This fixes an issue where the CircularProgressbar svg has
+   * 0 width inside a "display: flex" container, and thus not visible.
+   */
+  width: 100%;
+  /*
+   * This fixes a centering issue with CircularProgressbarWithChildren:
+   * https://github.com/kevinsqi/react-circular-progressbar/issues/94
+   */
+  vertical-align: middle;
+}
+
+.CircularProgressbar .CircularProgressbar-path  {
+  stroke: #3e98c7 ;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease 0s;
+  position: inherit;
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.219));
+  
+}
+
+.CircularProgressbar .CircularProgressbar-trail {
+  stroke: #d6d6d6;
+  /* Used when trail is not full diameter, i.e. when props.circleRatio is set */
+  stroke-linecap: round;
+  
+}
+
+.CircularProgressbar .CircularProgressbar-text {
+  fill: #3e98c7;
+  font-size: 20px;
+  dominant-baseline: middle;
+  text-anchor: middle;
+  z-index: 30;
+}
+
+.CircularProgressbar .CircularProgressbar-background {
+  fill: #d6d6d6;
+}
+
+/*
+ * Sample background styles. Use these with e.g.:
+ *
+ *   <CircularProgressbar
+ *     className="CircularProgressbar-inverted"
+ *     background
+ *     percentage={50}
+ *   />
+ */
+.CircularProgressbar.CircularProgressbar-inverted .CircularProgressbar-background {
+  fill: #3e98c7;
+  
+}
+
+.CircularProgressbar.CircularProgressbar-inverted .CircularProgressbar-text {
+  fill: #fff;
+}
+
+.CircularProgressbar.CircularProgressbar-inverted .CircularProgressbar-path {
+  stroke: #fff;
+}
+
+.CircularProgressbar.CircularProgressbar-inverted .CircularProgressbar-trail {
+  stroke: transparent;
 }
