@@ -369,7 +369,8 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
       );
    
     };
-    getLocationList();
+    // getLocationList();
+    
 
   }, []);
   useEffect(() => {
