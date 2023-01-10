@@ -485,10 +485,29 @@ const DeviceDashboard = () => {
             Oxygen Threshold
           </button>
         </div>
-        <div className=" flex  px-[20px] h-full">
+        <div className=" flex justify-between  px-[20px] h-full">
           <div className=" flex flex-col justify-center items-center mt-[17px]">
             <p className=" text-[20px] font-bold"> Current</p>
-            <img src="/images/thunder.png" className=" max-w-[23px] max-h-[31px]" alt="" />
+            <img
+              src="/images/thunder.png"
+              className=" max-w-[23px] max-h-[31px]"
+              alt=""
+            />
+          </div>
+          <div className=" flex flex-col w-[106px]  items-center">
+            <div className=" w-[85px] h-[85px] bg-white rounded-full mt-auto flex flex-col items-center justify-center ">
+              <p className=" text-[#3FA37E] text-[22px] ">150</p>
+              <p className=" text-[#66B55F] font-thin">mA</p>
+            </div>
+          </div>
+          <div className=" flex flex-col w-[106px]  items-center">
+            <div className=" w-[85px] h-[85px] bg-white rounded-full mt-auto flex flex-col items-center justify-center "></div>
+          </div>
+          <div className=" flex flex-col w-[106px]  items-center">
+            <div className=" w-[85px] h-[85px] bg-white rounded-full mt-auto flex flex-col items-center justify-center "></div>
+          </div>
+          <div className=" flex flex-col w-[106px]  items-center">
+            <div className=" w-[85px] h-[85px] bg-white rounded-full mt-auto flex flex-col items-center justify-center "></div>
           </div>
         </div>
       </div>

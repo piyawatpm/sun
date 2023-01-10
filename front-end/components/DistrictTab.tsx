@@ -3,9 +3,8 @@ import { Fragment, ReactElement, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { mockArea } from "../pages";
 import District from "./DistrictCard";
-import DevicesList from "./DevicesList";
-import DistrictList from "./DistrictList";
 import MyCombobox from "./MyCombobox";
+import axios from "axios";
 
 type View = "overall" | string;
 const testData = {
@@ -87,29 +86,8 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
   const [selectDistrict, setSelectDistrict] = useState<string>();
   const [allDevices, setAllDevices] = useState(testData);
   const [devicesInDistrict, setDevicesInDistrict] = useState<any>();
-  useEffect(() => {
-    map.data.setStyle((feature) => {
-      let color = "white";
-
-      if (feature.getProperty("isSelected")) {
-        color = "#8F8F8F";
-      } else {
-        color = "white";
-      }
-      return /** @type {!google.maps.Data.StyleOptions} */ {
-        fillColor: color,
-        strokeWeight: 3,
-        strokeColor: "#707070",
-      };
-    });
-    map.data.forEach((e) => {
-      if (selectDistrict === e.j.a) {
-        console.log(e);
-        e.setProperty("isSelected", true);
-      } else e.setProperty("isSelected", false);
-    });
-  }, [selectDistrict]);
-
+  const [locations, setLocations] = useState();
+  const [devicesByDistrict, setDevicesByDistrict] = useState();
   const resetMap = () => {
     map.data.forEach(function (feature) {
       map.data.remove(feature);
@@ -376,6 +354,47 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
       map.setZoom(14.5);
     }
   }, [viewState]);
+  useEffect(() => {
+    const getLocationList = async () => {
+      const result = await axios("http://103.170.142.47:8000/api/v1/location");
+      setLocations(
+        result.data.map((e) => {
+          return e.id;
+        })
+      );
+    };
+    const getDeviceAndCatagorizeByDistrict = async () => {
+      const result = await axios(
+        "http://103.170.142.47:8000/api/v1/deviceGroup"
+      );
+   
+    };
+    getLocationList();
+
+  }, []);
+  useEffect(() => {
+    map.data.setStyle((feature) => {
+      let color = "white";
+
+      if (feature.getProperty("isSelected")) {
+        color = "#8F8F8F";
+      } else {
+        color = "white";
+      }
+      return /** @type {!google.maps.Data.StyleOptions} */ {
+        fillColor: color,
+        strokeWeight: 3,
+        strokeColor: "#707070",
+      };
+    });
+    map.data.forEach((e) => {
+      if (selectDistrict === e.j.a) {
+        console.log(e);
+        e.setProperty("isSelected", true);
+      } else e.setProperty("isSelected", false);
+    });
+  }, [selectDistrict]);
+
   return (
     <div className=" flex  flex-col pb-6 px-3 h-full bg-[#F5F5F5] rounded-b-md  ">
       <div className=" w-full flex  min-h-[104px] pt-8 pb-[18px] pl-[30px]  ">
@@ -383,7 +402,14 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
           <>
             <MyCombobox filteredByClients={filteredByClients} />
             <div className=" text-left flex items-start ml-[30px]">
-              <p className=" text-[20px] font-bold  text-[#656565]">Client</p>
+              <p
+                onClick={() => {
+                  console.log(locations);
+                }}
+                className=" text-[20px] font-bold  text-[#656565]"
+              >
+                Client
+              </p>
             </div>
             <button
               onClick={openAddDevicePopup}

@@ -427,10 +427,10 @@ export const filterDistrict = (deviceArr = {}, districtArr = {}) => {
 };
 
 export default function Home({ isLoggedin }: HomeProps) {
-  const address = `http://103.170.142.47:8000/api/v1/location`;
-  const fetcher = async (url) => await api.get(url).then((res) => res.data);
-  const { data, error } = useSWR(address, fetcher);
-  console.log(data);
+  // const address = `http://103.170.142.47:8000/api/v1/location`;
+  // const fetcher = async (url) => await api.get(url).then((res) => res.data);
+  // const { data, error } = useSWR(address, fetcher);
+  // console.log(data);
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: "AIzaSyCTd-4w5z5_-dQtt6U1_dK-lWXRQVSjgGU",
@@ -470,7 +470,7 @@ export default function Home({ isLoggedin }: HomeProps) {
   };
   useEffect(() => {
     if (map && isLoaded) {
-        console.log(data)
+        // console.log(data)
         mockArea.forEach((e) => {
           const feature = map?.data.addGeoJson(e);
           console.log(feature);

@@ -1,8 +1,15 @@
 import { CircularProgressbar } from "react-circular-progressbar";
-import ReactSpeedometer from "react-d3-speedometer";
 
 const hello = () => {
   const percentage = 66;
-  return <div className=" w-[250px] h-[250px]"></div>;
+  return (
+    <div className=" w-screen h-screen flex items-center justify-center">
+      <div id="logo">
+      <div id="j" className=" items-center" ></div>
+
+        <span className="needle"></span>
+      </div>
+    </div>
+  );
 };
 export default hello;
