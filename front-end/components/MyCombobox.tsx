@@ -1,21 +1,17 @@
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/20/solid";
+import axios from "axios";
+import useSWR from "swr";
 import { Fragment, useEffect, useState } from "react";
 
-export default function MyCombobox({ filteredByClients }) {
+export default function MyCombobox({ filteredByClients, clients }) {
+ 
   const [selected, setSelected] = useState({ id: 0, name: "All" });
   const [query, setQuery] = useState("");
-  const people = [
-    { id: 0, name: "All" },
-    { id: 1, name: "client1" },
-    { id: 2, name: "client2" },
-    { id: 3, name: "client3" },
-    { id: 4, name: "client4" },
-  ];
   const filteredPeople =
     query === ""
-      ? people
-      : people.filter((person) =>
+      ? clients
+      : clients.filter((person) =>
           person.name
             .toLowerCase()
             .replace(/\s+/g, "")
@@ -24,7 +20,7 @@ export default function MyCombobox({ filteredByClients }) {
 
   useEffect(() => {
     // @ts-ignore
-    if (selected) filteredByClients(selected.name);
+    if (selected) filteredByClients(selected.id);
   }, [selected]);
   return (
     <div className=" w-[267px]">

@@ -2,7 +2,7 @@ type DistrictCardProps = {
   setSelectDistrict?: any;
   selectDistrict?: any;
   data: any;
-  selectedDistrict: any;
+  selectedDistrict?: any;
 };
 const DistrictCard = ({
   setSelectDistrict,

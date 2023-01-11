@@ -5,7 +5,8 @@ import { mockArea } from "../pages";
 import District from "./DistrictCard";
 import MyCombobox from "./MyCombobox";
 import axios from "axios";
-
+import { useMemo } from "react";
+import useSWR from "swr";
 type View = "overall" | string;
 const testData = {
   area1: {
@@ -87,61 +88,67 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
   const [allDevices, setAllDevices] = useState(testData);
   const [devicesInDistrict, setDevicesInDistrict] = useState<any>();
   const [locations, setLocations] = useState();
-  const [devicesByDistrict, setDevicesByDistrict] = useState();
+  const [filteredByClient, setFilteredByClient] = useState();
+  const addressDeviceGroup = `http://103.170.142.47:8000/api/v1/deviceGroup`;
+  const fetcher = async (url) => await axios.get(url).then((res) => res.data);
+  const { data: deviceGroup } = useSWR(addressDeviceGroup, fetcher);
+  const addressClient = `http://103.170.142.47:8000/api/v1/client`;
+  const fetcherClient = async (url) =>
+    await axios.get(url).then((res) => res.data);
+  const { data: clients } = useSWR(addressClient, fetcherClient);
+  const modifiedData = useMemo(() => {
+    if (filteredByClient === 0) return deviceGroup;
+    let output;
+    if (deviceGroup) {
+      output = deviceGroup.filter((e) => e.client === filteredByClient);
+    }
+    return output;
+  }, [deviceGroup, filteredByClient]);
+  const devicesByDistrict = useMemo(() => {
+    if (!modifiedData) return [];
+    const grouped = modifiedData.reduce((prev, cur) => {
+      return prev[cur.location]
+        ? { ...prev, [cur.location]: [...prev[cur.location], cur] }
+        : { ...prev, [cur.location]: [cur] };
+    }, {});
+    const formattedData = Object.entries(grouped).reduce(
+      (prev, [key, value]) => {
+        // @ts-ignore
+        const r = value.reduce((prev, cur, idx) => {
+          if (idx === 0) {
+            return {
+              offline_devices: cur["offline_devices"],
+              online_devices: cur["online_devices"],
+              total_devices: cur["total_devices"],
+              warning_devices: cur["warning_devices"],
+            };
+          } else {
+            return {
+              offline_devices: prev["offline_devices"] + cur["offline_devices"],
+              online_devices: prev["online_devices"] + cur["online_devices"],
+              total_devices: prev["total_devices"] + cur["total_devices"],
+              warning_devices: prev["warning_devices"] + cur["warning_devices"],
+            };
+          }
+        }, {});
+        return { ...prev, [key]: { sumData: r } };
+      },
+      {}
+    );
+    return formattedData;
+  }, [modifiedData]);
+  const filteredByDistrict = useMemo(() => {
+    if (!modifiedData) return [];
+    let filteredDistrict = modifiedData.filter((e) => e.location == viewState);
+    console.log(filteredDistrict);
+    return filteredDistrict;
+  }, [viewState, modifiedData]);
   const resetMap = () => {
     map.data.forEach(function (feature) {
       map.data.remove(feature);
     });
   };
-  const filteredByClients = (clientName) => {
-    if (clientName === "All") {
-      resetMap();
-      mockArea.forEach((e) => {
-        map?.data.addGeoJson(e);
-        map.data.setStyle({
-          fillColor: "#FFFFFF",
-          strokeWeight: 3,
-          strokeColor: "#707070",
-        });
-      });
-      setAllDevices(testData);
-      return;
-    }
-    resetMap();
-    // @ts-ignore
-    setAllDevices((prv) => {
-      let newDevice = {};
 
-      for (const property in testData) {
-        for (const property2 in testData[property]) {
-          let newDistrict = {};
-          let result = testData[property][property2].filter((e) => {
-            // console.log(e.client)
-            return e.client === clientName;
-          });
-          console.log(result);
-          if (result.length >= 1) {
-            newDistrict[property2] = result;
-            newDevice[property] = { ...newDistrict };
-            mockArea.forEach((e) => {
-              if (e.a === property) {
-                map?.data.addGeoJson(e);
-                map.data.setStyle({
-                  fillColor: "#FFFFFF",
-                  strokeWeight: 3,
-                  strokeColor: "#707070",
-                });
-              }
-            });
-          }
-        }
-      }
-      console.log(newDevice);
-      return newDevice;
-    });
-  };
-
-  // const changeToDevicesList = () => {
   //   setViewState("DevicesView");
   // };
   // const changeToDistrictList = () => {
@@ -156,152 +163,7 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
   //   id: string;
   //   user: string;
   // };
-  // const mockDataDistrict: DistrictStatus[] = [
-  //   {
-  //     district: "JAURES",
-  //     ozoneMate: 5,
-  //     online: 6,
-  //     offline: 7,
-  //     alert: 1,
-  //     id: uuidv4(),
-  //     user: "Wade Cooper",
-  //   },
-  //   {
-  //     district: "FAUBORG SAINT-GERMAIN",
-  //     ozoneMate: 5,
-  //     online: 6,
-  //     offline: 7,
-  //     alert: 0,
-  //     id: uuidv4(),
-  //     user: "Wade Cooper",
-  //   },
-  //   {
-  //     district: "LATIN QUARTER",
-  //     ozoneMate: 5,
-  //     online: 6,
-  //     offline: 7,
-  //     alert: 0,
-  //     id: uuidv4(),
-  //     user: "Tom Cook",
-  //   },
-  //   {
-  //     district: "PALAIS ROYAL",
-  //     ozoneMate: 5,
-  //     online: 6,
-  //     offline: 7,
-  //     alert: 4,
-  //     id: uuidv4(),
-  //     user: "Arlene Mccoy",
-  //   },
-  //   {
-  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-  //     ozoneMate: 5,
-  //     online: 6,
-  //     offline: 7,
-  //     alert: 1,
-  //     id: uuidv4(),
-  //     user: "Tom Cook",
-  //   },
-  //   {
-  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-  //     ozoneMate: 5,
-  //     online: 6,
-  //     offline: 7,
-  //     alert: 0,
-  //     id: uuidv4(),
-  //     user: "Arlene Mccoy",
-  //   },
-  //   {
-  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-  //     ozoneMate: 5,
-  //     online: 6,
-  //     offline: 7,
-  //     alert: 0,
-  //     id: uuidv4(),
-  //     user: "Arlene Mccoy",
-  //   },
-  //   {
-  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-  //     ozoneMate: 5,
-  //     online: 6,
-  //     offline: 7,
-  //     alert: 0,
-  //     id: uuidv4(),
-  //     user: "Arlene Mccoy",
-  //   },
-  //   {
-  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-  //     ozoneMate: 5,
-  //     online: 6,
-  //     offline: 7,
-  //     alert: 1,
-  //     id: uuidv4(),
-  //     user: "Tanya Fox",
-  //   },
-  //   {
-  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-  //     ozoneMate: 5,
-  //     online: 6,
-  //     offline: 7,
-  //     alert: 7,
-  //     id: uuidv4(),
-  //     user: "Tanya Fox",
-  //   },
-  //   {
-  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-  //     ozoneMate: 5,
-  //     online: 6,
-  //     offline: 7,
-  //     alert: 0,
-  //     id: uuidv4(),
-  //     user: "Tanya Fox",
-  //   },
-  //   {
-  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-  //     ozoneMate: 5,
-  //     online: 6,
-  //     offline: 7,
-  //     alert: 0,
-  //     id: uuidv4(),
-  //     user: "Arlene Mccoy",
-  //   },
-  //   {
-  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-  //     ozoneMate: 5,
-  //     online: 6,
-  //     offline: 7,
-  //     alert: 1,
-  //     id: uuidv4(),
-  //     user: "Arlene Mccoy",
-  //   },
-  //   {
-  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-  //     ozoneMate: 5,
-  //     online: 6,
-  //     offline: 7,
-  //     alert: 5,
-  //     id: uuidv4(),
-  //     user: "Hellen Schmidt",
-  //   },
-  //   {
-  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-  //     ozoneMate: 5,
-  //     online: 6,
-  //     offline: 7,
-  //     alert: 0,
-  //     id: uuidv4(),
-  //     user: "Hellen Schmidt",
-  //   },
-  //   {
-  //     district: " 43 Rue du Calvalre Nanterre, lie-deoverflow overflow",
-  //     ozoneMate: 5,
-  //     online: 6,
-  //     offline: 7,
-  //     alert: 0,
-  //     id: uuidv4(),
-  //     user: "Hellen Schmidt",
-  //   },
-  // ];
+
   // useEffect(() => {
   //   if (map) {
   // mockArea.forEach((e) => {
@@ -318,29 +180,8 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
   //     });
   //   }
   // }, []);
-  const getTotalDeviceInDistrict = (obj) => {
-    let TotalDevice = 0;
-    for (const key in obj) {
-      TotalDevice += obj[key].length;
-    }
-    return TotalDevice;
-  };
-  const getTotalByPropertyInDistrict = (obj, property) => {
-    let TotalProperty = 0;
-    if (property === "isWarning") {
-      for (const key in obj) {
-        TotalProperty += obj[key].filter((e) => {
-          return e.isWarning === true;
-        }).length;
-      }
-    } else {
-      for (const key in obj) {
-        TotalProperty += obj[key].filter((e) => {
-          return e.status === property;
-        }).length;
-      }
-    }
-    return TotalProperty;
+  const filteredByClients = (targetClient) => {
+    setFilteredByClient(targetClient);
   };
   const selectedDistrict = (district) => {
     setViewState(district);
@@ -358,21 +199,15 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
     const getLocationList = async () => {
       const result = await axios("http://103.170.142.47:8000/api/v1/location");
       setLocations(
-        result.data.map((e) => {
-          return e.id;
-        })
+        result.data.reduce((prev, cur) => {
+          return { ...prev, [cur.id]: cur.name };
+        }, {})
       );
     };
-    const getDeviceAndCatagorizeByDistrict = async () => {
-      const result = await axios(
-        "http://103.170.142.47:8000/api/v1/deviceGroup"
-      );
-   
-    };
-    // getLocationList();
-    
 
+    getLocationList();
   }, []);
+
   useEffect(() => {
     map.data.setStyle((feature) => {
       let color = "white";
@@ -397,20 +232,23 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
   }, [selectDistrict]);
 
   return (
-    <div className=" flex  flex-col pb-6 px-3 h-full bg-[#F5F5F5] rounded-b-md  ">
+    <div
+      onClick={() => {
+        console.log(filteredByDistrict);
+      }}
+      className=" flex  flex-col pb-6 px-3 h-full bg-[#F5F5F5] rounded-b-md  "
+    >
       <div className=" w-full flex  min-h-[104px] pt-8 pb-[18px] pl-[30px]  ">
         {viewState === "overall" ? (
           <>
-            <MyCombobox filteredByClients={filteredByClients} />
+            {clients && (
+              <MyCombobox
+                filteredByClients={filteredByClients}
+                clients={[{ id: 0, name: "All" }, ...clients]}
+              />
+            )}
             <div className=" text-left flex items-start ml-[30px]">
-              <p
-                onClick={() => {
-                  console.log(locations);
-                }}
-                className=" text-[20px] font-bold  text-[#656565]"
-              >
-                Client
-              </p>
+              <p className=" text-[20px] font-bold  text-[#656565]">Client</p>
             </div>
             <button
               onClick={openAddDevicePopup}
@@ -442,9 +280,9 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
         )}
       </div>
       <div className="overflow-scroll h-full space-y-11 flex flex-col items-center rounded-[6px]  pl-[30px] pr-[20px]  custom-scrollbar">
-        {viewState === "overall" ? (
+        {viewState === "overall" && devicesByDistrict ? (
           <>
-            {Object.entries(allDevices).map(([key, value]) => {
+            {Object.entries(devicesByDistrict).map(([key, value]) => {
               return (
                 <District
                   selectedDistrict={selectedDistrict}
@@ -452,10 +290,14 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
                   selectDistrict={selectDistrict}
                   setSelectDistrict={setSelectDistrict}
                   data={{
-                    ozoneMate: getTotalDeviceInDistrict(value),
-                    online: getTotalByPropertyInDistrict(value, "online"),
-                    offline: getTotalByPropertyInDistrict(value, "offline"),
-                    warning: getTotalByPropertyInDistrict(value, "isWarning"),
+                    // @ts-ignore
+                    ozoneMate: value.sumData.total_devices,
+                    // @ts-ignore
+                    online: value.sumData.online_devices,
+                    // @ts-ignore
+                    offline: value.sumData.offline_devices,
+                    // @ts-ignore
+                    warning: value.sumData.warning_devices,
                     district: key,
                     id: key,
                   }}
@@ -467,33 +309,31 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
             })}
           </>
         ) : (
-          devicesInDistrict && (
+          filteredByDistrict && (
             <>
-              {Object.entries(devicesInDistrict).map(([key, value]) => {
+              {filteredByDistrict.map((e) => {
+                console.log(e);
                 return (
                   <District
                     selectedDistrict={selectedDistrict}
-                    key={key}
+                    key={e.id}
                     selectDistrict={selectDistrict}
                     setSelectDistrict={setSelectDistrict}
                     data={{
                       // @ts-ignore
-                      ozoneMate: value.length,
+                      ozoneMate: e.total_devices,
                       // @ts-ignore
-                      online: value.filter((e) => {
-                        return e.status === "online";
-                      }).length,
+                      online: e.online_devices,
                       // @ts-ignore
-                      offline: value.filter((e) => {
-                        return e.status === "offline";
-                      }).length,
+                      offline: e.offline_devices,
                       // @ts-ignore
-                      warning: value.filter((e) => {
-                        return e.isWarning === true;
-                      }).length,
-                      district: key,
-                      id: key,
+                      warning: e.warning_devices,
+                      district: e.name,
+                      id: e.id,
                     }}
+                    // isSelected={isSelectDistrict}
+                    // setSelected={setIsSelectDistrict}
+                    // changeView={changeToDevicesList}
                   />
                 );
               })}

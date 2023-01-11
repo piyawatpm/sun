@@ -448,7 +448,7 @@ export default function Home({ isLoggedin }: HomeProps) {
 
   console.log(isLoggedin);
   const [isOpenInterface, setIsOpenInterface] = useState(true);
-  // const [isLogin, setIsLogin] = useState(isLoggedin);
+  const [isLogin, setIsLogin] = useState(isLoggedin);
   const [isAddDevice, setIsAddDevice] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
 
@@ -497,12 +497,11 @@ export default function Home({ isLoggedin }: HomeProps) {
   return (
     <>
       <div style={{ height: "100vh", width: "100%", position: "relative" }}>
-        {/* {isLogin ? (
+        {isLogin ? (
           <Interface map={map} openAddDevicePopup={openAddDevicePopup} />
         ) : (
           <Login login={setIsLogin} />
-        )} */}
-         <Interface map={map} openAddDevicePopup={openAddDevicePopup} />
+        )}
         {isAddDevice && <AddDevice closeAddDevicePopup={closeAddDevicePopup} />}
         <button
           onClick={() => {
