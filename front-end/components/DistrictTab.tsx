@@ -8,94 +8,24 @@ import axios from "axios";
 import { useMemo } from "react";
 import useSWR from "swr";
 type View = "overall" | string;
-const testData = {
-  area1: {
-    g1: [
-      {
-        group: "g1",
-        deviceId: 1,
-        status: "online",
-        cellHours: 1075,
-        oxyHours: 2012,
-        district: "area1",
-        client: "client1",
-        isWarning: true,
-        isMaintencence: false,
-      },
-      {
-        group: "g1",
-        deviceId: 2,
-        status: "offline",
-        cellHours: 1453,
-        oxyHours: 3042,
-        district: "area1",
-        client: "client1",
-        isWarning: false,
-        isMaintencence: false,
-      },
-    ],
-  },
-
-  area2: {
-    g2: [
-      {
-        group: "g2",
-        deviceId: 3,
-        status: "online",
-        cellHours: 5012,
-        oxyHours: 1053,
-        district: "area2",
-        client: "client2",
-        isWarning: false,
-        isMaintencence: false,
-      },
-    ],
-  },
-
-  area3: {
-    g3: [
-      {
-        group: "g3",
-        deviceId: 4,
-        status: "offline",
-        cellHours: 1661,
-        oxyHours: 3212,
-        district: "area3",
-        client: "client3",
-        isWarning: false,
-        isMaintencence: true,
-      },
-    ],
-    g4: [
-      {
-        group: "g4",
-        deviceId: 5,
-        status: "offline",
-        cellHours: 60220,
-        oxyHours: 2240,
-        district: "area3",
-        client: "client1",
-        isWarning: true,
-        isMaintencence: true,
-      },
-    ],
-  },
-};
 
 const districtTab = ({ openAddDevicePopup, map }: any) => {
   const [viewState, setViewState] = useState<View>("overall");
   const [selectDistrict, setSelectDistrict] = useState<string>();
-  const [allDevices, setAllDevices] = useState(testData);
-  const [devicesInDistrict, setDevicesInDistrict] = useState<any>();
   const [locations, setLocations] = useState();
   const [filteredByClient, setFilteredByClient] = useState();
   const addressDeviceGroup = `http://103.170.142.47:8000/api/v1/deviceGroup`;
-  const fetcher = async (url) => await axios.get(url).then((res) => res.data);
-  const { data: deviceGroup } = useSWR(addressDeviceGroup, fetcher);
+  const fetcherDevice = async (url) =>
+    await axios.get(url).then((res) => res.data);
+  const { data: deviceGroup } = useSWR(addressDeviceGroup, fetcherDevice);
   const addressClient = `http://103.170.142.47:8000/api/v1/client`;
   const fetcherClient = async (url) =>
     await axios.get(url).then((res) => res.data);
   const { data: clients } = useSWR(addressClient, fetcherClient);
+  const addressLocations = `http://103.170.142.47:8000/api/v1/location`;
+  const fetcherLocation = async (url) =>
+    await axios.get(url).then((res) => res.data);
+  const { data: location } = useSWR(addressLocations, fetcherLocation);
   const modifiedData = useMemo(() => {
     if (filteredByClient === 0) return deviceGroup;
     let output;
@@ -186,27 +116,8 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
   const selectedDistrict = (district) => {
     setViewState(district);
   };
-  useEffect(() => {
-    if (viewState !== "overall") {
-      let a = allDevices[viewState];
-      console.log(a);
 
-      setDevicesInDistrict(a);
-      map.setZoom(14.5);
-    }
-  }, [viewState]);
-  useEffect(() => {
-    const getLocationList = async () => {
-      const result = await axios("http://103.170.142.47:8000/api/v1/location");
-      setLocations(
-        result.data.reduce((prev, cur) => {
-          return { ...prev, [cur.id]: cur.name };
-        }, {})
-      );
-    };
-
-    getLocationList();
-  }, []);
+  useEffect(() => {}, []);
 
   useEffect(() => {
     map.data.setStyle((feature) => {
@@ -234,7 +145,7 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
   return (
     <div
       onClick={() => {
-        console.log(filteredByDistrict);
+        console.log(location);
       }}
       className=" flex  flex-col pb-6 px-3 h-full bg-[#F5F5F5] rounded-b-md  "
     >
