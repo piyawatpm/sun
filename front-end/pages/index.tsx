@@ -1,10 +1,10 @@
 import React, { useState, useCallback, useEffect } from "react";
-import GoogleMapReact from "google-map-react";
 import {
   GoogleMap,
   useJsApiLoader,
   Autocomplete,
   Polygon,
+  
 } from "@react-google-maps/api";
 
 import Interface from "../components/Interface";
@@ -468,31 +468,7 @@ export default function Home({ isLoggedin }: HomeProps) {
   const closeAddDevicePopup = () => {
     setIsAddDevice(false);
   };
-  useEffect(() => {
-    if (map && isLoaded) {
-        // console.log(data)
-        mockArea.forEach((e) => {
-          const feature = map?.data.addGeoJson(e);
-          console.log(feature);
-          // feature.addProperty("district", e.a);
-        });
-        map.data.setStyle({
-          fillColor: "#FFFFFF",
-          strokeWeight: 3,
-          strokeColor: "#707070",
-        });
-      
 
-      // var marker = new google.maps.Marker({
-      //   position: {
-      //     lng: 2.40033936500561,
-      //     lat: 48.8777471008302,
-      //   },
-      //   map: map,
-      //   // icon: './alert.png',
-      // });
-    }
-  }, [map, isLoaded]);
 
   return (
     <>

@@ -12,8 +12,8 @@ type View = "overall" | string;
 const districtTab = ({ openAddDevicePopup, map }: any) => {
   const [viewState, setViewState] = useState<View>("overall");
   const [selectDistrict, setSelectDistrict] = useState<string>();
-  const [locations, setLocations] = useState();
   const [filteredByClient, setFilteredByClient] = useState();
+  const [renderedMarker, setRenderedMarker] = useState();
   const addressDeviceGroup = `http://103.170.142.47:8000/api/v1/deviceGroup`;
   const fetcherDevice = async (url) =>
     await axios.get(url).then((res) => res.data);
@@ -70,7 +70,6 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
   const filteredByDistrict = useMemo(() => {
     if (!modifiedData) return [];
     let filteredDistrict = modifiedData.filter((e) => e.location == viewState);
-    console.log(filteredDistrict);
     return filteredDistrict;
   }, [viewState, modifiedData]);
   const resetMap = () => {
@@ -78,6 +77,20 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
       map.data.remove(feature);
     });
   };
+  useEffect(() => {
+    if (viewState !== "overAll") {
+      filteredByDistrict.map((item) => {
+        console.log(item);
+        var marker = new google.maps.Marker({
+          position: {
+            lng: item.lat,
+            lat: item.lng,
+          },
+        });
+        marker.setMap(map);
+      });
+    }
+  }, [viewState]);
 
   //   setViewState("DevicesView");
   // };
@@ -117,12 +130,18 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
     setViewState(district);
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    resetMap();
+    const arr = Object.keys(devicesByDistrict);
+    const filteredLocation = location?.filter((e) => arr.includes(`${e.id}`));
+    filteredLocation?.map((e) => {
+      map.data.addGeoJson(e.geoJson);
+    });
+  }, [devicesByDistrict]);
 
   useEffect(() => {
     map.data.setStyle((feature) => {
       let color = "white";
-
       if (feature.getProperty("isSelected")) {
         color = "#8F8F8F";
       } else {
@@ -135,8 +154,8 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
       };
     });
     map.data.forEach((e) => {
-      if (selectDistrict === e.j.a) {
-        console.log(e);
+      console.log(selectDistrict);
+      if (selectDistrict == e.j.id) {
         e.setProperty("isSelected", true);
       } else e.setProperty("isSelected", false);
     });
@@ -145,7 +164,9 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
   return (
     <div
       onClick={() => {
-        console.log(location);
+        map.data.forEach((e) => {
+          console.log(e);
+        });
       }}
       className=" flex  flex-col pb-6 px-3 h-full bg-[#F5F5F5] rounded-b-md  "
     >
@@ -223,29 +244,30 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
           filteredByDistrict && (
             <>
               {filteredByDistrict.map((e) => {
-                console.log(e);
                 return (
-                  <District
-                    selectedDistrict={selectedDistrict}
-                    key={e.id}
-                    selectDistrict={selectDistrict}
-                    setSelectDistrict={setSelectDistrict}
-                    data={{
-                      // @ts-ignore
-                      ozoneMate: e.total_devices,
-                      // @ts-ignore
-                      online: e.online_devices,
-                      // @ts-ignore
-                      offline: e.offline_devices,
-                      // @ts-ignore
-                      warning: e.warning_devices,
-                      district: e.name,
-                      id: e.id,
-                    }}
-                    // isSelected={isSelectDistrict}
-                    // setSelected={setIsSelectDistrict}
-                    // changeView={changeToDevicesList}
-                  />
+                  <>
+                    <District
+                      selectedDistrict={selectedDistrict}
+                      key={e.id}
+                      selectDistrict={selectDistrict}
+                      setSelectDistrict={setSelectDistrict}
+                      data={{
+                        // @ts-ignore
+                        ozoneMate: e.total_devices,
+                        // @ts-ignore
+                        online: e.online_devices,
+                        // @ts-ignore
+                        offline: e.offline_devices,
+                        // @ts-ignore
+                        warning: e.warning_devices,
+                        district: e.name,
+                        id: e.id,
+                      }}
+                      // isSelected={isSelectDistrict}
+                      // setSelected={setIsSelectDistrict}
+                      // changeView={changeToDevicesList}
+                    />
+                  </>
                 );
               })}
             </>
