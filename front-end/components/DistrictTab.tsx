@@ -13,7 +13,8 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
   const [viewState, setViewState] = useState<View>("overall");
   const [selectDistrict, setSelectDistrict] = useState<string>();
   const [filteredByClient, setFilteredByClient] = useState();
-  const [renderedMarker, setRenderedMarker] = useState();
+  const [renderedMarker, setRenderedMarker] = useState([]);
+
   const addressDeviceGroup = `http://103.170.142.47:8000/api/v1/deviceGroup`;
   const fetcherDevice = async (url) =>
     await axios.get(url).then((res) => res.data);
@@ -78,16 +79,21 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
     });
   };
   useEffect(() => {
-    if (viewState !== "overAll") {
+    if (viewState !== "overall") {
       filteredByDistrict.map((item) => {
-        console.log(item);
         var marker = new google.maps.Marker({
           position: {
             lng: item.lat,
             lat: item.lng,
           },
         });
+        setRenderedMarker((p) => [...p, marker]);
         marker.setMap(map);
+      });
+    } else {
+      //clear marker if change view point
+      renderedMarker.forEach((e) => {
+        e.setMap(null);
       });
     }
   }, [viewState]);
