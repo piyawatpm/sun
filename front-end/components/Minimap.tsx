@@ -13,10 +13,10 @@ const Minimap = () => {
     height: "100vh",
   };
 
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: "AIzaSyCTd-4w5z5_-dQtt6U1_dK-lWXRQVSjgGU",
-  });
+  // const { isLoaded } = useJsApiLoader({
+  //   id: "google-map-script",
+  //   googleMapsApiKey: "AIzaSyCTd-4w5z5_-dQtt6U1_dK-lWXRQVSjgGU",
+  // });
   const [map, setMap] = useState<google.maps.Map>(null);
 
   const onLoad = useCallback(function callback(map) {
@@ -31,52 +31,53 @@ const Minimap = () => {
     setMap(null);
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      let infoWindow = null;
-      const geocoder = new google.maps.Geocoder();
-      // Configure the click listener.
-      if (map && isLoaded) {
-        map.addListener(
-          "click",
-          async (mapsMouseEvent: google.maps.MapMouseEvent) => {
-            // Close the current InfoWindow.
-            infoWindow?.close();
-            // Create a new InfoWindow.
-            infoWindow = new google.maps.InfoWindow({
-              position: mapsMouseEvent.latLng,
-            });
-            console.log(mapsMouseEvent.latLng.lat());
-            const x = await geocoder.geocode({
-              location: mapsMouseEvent.latLng,
-            });
-            console.log(x.results[0]);
+  // useEffect(() => {
+  //   (async () => {
+  //     let infoWindow = null;
+  //     const geocoder = new google.maps.Geocoder();
+  //     // Configure the click listener.
+  //     if (map && isLoaded) {
+  //       map.addListener(
+  //         "click",
+  //         async (mapsMouseEvent: google.maps.MapMouseEvent) => {
+  //           // Close the current InfoWindow.
+  //           infoWindow?.close();
+  //           // Create a new InfoWindow.
+  //           infoWindow = new google.maps.InfoWindow({
+  //             position: mapsMouseEvent.latLng,
+  //           });
+  //           console.log(mapsMouseEvent.latLng.lat());
+  //           const x = await geocoder.geocode({
+  //             location: mapsMouseEvent.latLng,
+  //           });
+  //           console.log(x.results[0]);
 
-            infoWindow.setContent(
-              `<p>${JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)}</p>
-             <p>${JSON.stringify(x.results[0], null, 2)}</p>`
-            );
-            infoWindow.open(map);
-          }
-        );
-      }
-    })();
-  }, [map, isLoaded]);
+  //           infoWindow.setContent(
+  //             `<p>${JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)}</p>
+  //            <p>${JSON.stringify(x.results[0], null, 2)}</p>`
+  //           );
+  //           infoWindow.open(map);
+  //         }
+  //       );
+  //     }
+  //   })();
+  // }, [map, isLoaded]);
   return (
-    <div className=" w-full h-full">
-      {isLoaded && (
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={center}
-          zoom={10}
-          onLoad={onLoad}
-          onUnmount={onUnmount}
-        >
-          {/* Child components, such as markers, info windows, etc. */}
-          <></>
-        </GoogleMap>
-      )}
-    </div>
+    // <div className=" w-full h-full">
+    //   {isLoaded && (
+    //     <GoogleMap
+    //       mapContainerStyle={containerStyle}
+    //       center={center}
+    //       zoom={10}
+    //       onLoad={onLoad}
+    //       onUnmount={onUnmount}
+    //     >
+    //       {/* Child components, such as markers, info windows, etc. */}
+    //       <></>
+    //     </GoogleMap>
+    //   )}
+    // </div>
+    <></>
   );
 };
 export default Minimap;

@@ -83,8 +83,8 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
       filteredByDistrict.map((item) => {
         var marker = new google.maps.Marker({
           position: {
-            lng: item.lat,
-            lat: item.lng,
+            lng: item.lng,
+            lat: item.lat,
           },
         });
         setRenderedMarker((p) => [...p, marker]);

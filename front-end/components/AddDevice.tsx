@@ -1,7 +1,7 @@
 import {
   Autocomplete,
   LoadScript,
-  useJsApiLoader,
+  StandaloneSearchBox,
 } from "@react-google-maps/api";
 import { useState } from "react";
 import Minimap from "./Minimap";
@@ -9,29 +9,64 @@ import Minimap from "./Minimap";
 type AddDeviceProps = {
   closeAddDevicePopup: () => void;
 };
+
+type FormData = {
+  deviceName: string;
+  clientName: string;
+  address: string;
+  location: {
+    lat: number;
+    lng: number;
+  };
+  email: string;
+  phoneNumber: string;
+  serialNumber: string;
+  simcardPhoneNumber: string;
+  imei: string;
+  simSerialNumber: string;
+};
 const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: "AIzaSyCTd-4w5z5_-dQtt6U1_dK-lWXRQVSjgGU",
-  });
   const [isMinimapOpen, setIsMinimapOpen] = useState<boolean>(false);
   const openMap = () => {
     setIsMinimapOpen((p) => !p);
   };
+  const [formData, setFormData] = useState<FormData>();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [autocomplete, setAutocomplete] = useState();
+  const [selectedSerial, setSelectedSerial] = useState<string>();
   const onLoad = (autocomplete) => {
     console.log("autocomplete: ", autocomplete);
 
     setAutocomplete(autocomplete);
   };
-  const onPlaceChanged = () => {
+  const onPlacesChanged = () => {
     if (autocomplete !== null) {
       // @ts-ignores
-      console.log(autocomplete.getPlace());
-    } else {
-      console.log("Autocomplete is not loaded yet!");
+
+      const addressData = autocomplete.getPlace();
+      const latFromAddress = addressData.geometry.location.lat();
+      const lngFromAddress = addressData.geometry.location.lng();
+
+      setFormData((p) => {
+        return {
+          ...p,
+          address: addressData.formatted_address,
+          location: { lat: latFromAddress, lng: lngFromAddress },
+        };
+      });
     }
+  };
+  const mockSerial = [
+    "SN-34235235-121214535-561",
+    "SN-34235235-121214535-562",
+    "SN-34235235-121214535-563",
+    "SN-34235235-121214535-564",
+    "SN-34235235-121214535-565",
+    "SN-34235235-121214535-566",
+    "SN-34235235-121214535-567",
+  ];
+  const handleSubmitForm = () => {
+    console.log(formData);
   };
   return (
     <div className=" z-20    bg-black/[45%] fixed inset-0  items-center justify-center font-bold">
@@ -59,7 +94,8 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
             </div>
           )}
           {isMinimapOpen ? (
-            <Minimap />
+            // <Minimap />
+            <></>
           ) : (
             <>
               {" "}
@@ -78,6 +114,12 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                     <div className=" flex">
                       <h2>Device Name</h2>
                       <input
+                        value={formData?.deviceName}
+                        onChange={(e) => {
+                          setFormData((p) => {
+                            return { ...p, deviceName: e.target.value };
+                          });
+                        }}
                         type="text"
                         className=" bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
                       />
@@ -86,86 +128,40 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                       <h2>Client Name</h2>
                       <input
                         type="text"
+                        value={formData?.clientName}
+                        onChange={(e) => {
+                          setFormData((p) => {
+                            return { ...p, clientName: e.target.value };
+                          });
+                        }}
                         className=" bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
-                      />
-                    </div>
-                    <div className=" flex">
-                      <h2>Device Number</h2>
-                      <input
-                        type="text"
-                        className=" w-10 bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
                       />
                     </div>
                   </div>
                 </div>
                 <div className=" space-y-[25px]">
                   <h1 className="text-[22px] ">Location Information</h1>
-                  <LoadScript
-                    id="script-loader"
-                    googleMapsApiKey="AIzaSyCTd-4w5z5_-dQtt6U1_dK-lWXRQVSjgGU"
-                    libraries={["places"]}
-                    language="en"
-                    region="EN"
-                    version="weekly"
-                  >
-                    <Autocomplete
-                      onLoad={onLoad}
-                      onPlaceChanged={onPlaceChanged}
-                    >
-                      <input
-                        type="text"
-                        placeholder="Customized your placeholder"
-                        style={{
-                          boxSizing: `border-box`,
-                          border: `1px solid transparent`,
-                          width: `500px`,
-                          height: `32px`,
-                          padding: `0 12px`,
-                          borderRadius: `3px`,
-                          boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                          fontSize: `14px`,
-                          outline: `none`,
-                          textOverflow: `ellipses`,
-                          position: "absolute",
-                          left: "50%",
-                          marginLeft: "-120px",
-                        }}
-                      />
-                    </Autocomplete>
-                  </LoadScript>
+
                   <div className=" text-[#656565] flex text-[20px] space-x-10">
-                    <div className=" flex">
-                      <h2>NO.</h2>
-                      <input
-                        type="text"
-                        className=" w-[85px] bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
-                      />
-                    </div>
-                    <div className=" flex">
-                      <h2>Street Name</h2>
-                      <input
-                        type="text"
-                        className=" bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
-                      />
-                    </div>
-                    <div className=" flex">
-                      <h2>Suburb</h2>
-                      <input
-                        type="text"
-                        className="  bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
-                      />
-                    </div>
-                    <div className=" flex">
-                      <h2>State</h2>
-                      <input
-                        type="text"
-                        className=" w-[135px] bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
-                      />
+                    <div className=" flex w-full">
+                      <h2>Address</h2>
+
+                      <Autocomplete
+                        onLoad={onLoad}
+                        onPlaceChanged={onPlacesChanged}
+                        className="w-full"
+                      >
+                        <input
+                          type="text"
+                          placeholder=""
+                          className=" w-full bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
+                        />
+                      </Autocomplete>
                     </div>
                   </div>
                   <div className=" text-[#656565] flex text-[20px] space-x-10">
-                    <div className=" flex">
-                      <h2>Country</h2>
+                    {/* <div className=" flex">
+                      <h2>city</h2>
                       <input
                         type="text"
                         className="  w-[213px] bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
@@ -177,11 +173,17 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                         type="text"
                         className="  w-[110px] bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
                       />
-                    </div>
+                    </div> */}
                     <div className=" flex">
                       <h2>Email</h2>
                       <input
                         type="text"
+                        value={formData?.email}
+                        onChange={(e) => {
+                          setFormData((p) => {
+                            return { ...p, email: e.target.value };
+                          });
+                        }}
                         className="  w-[213px] bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
                       />
                     </div>
@@ -189,6 +191,12 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                       <h2>Phone Number</h2>
                       <input
                         type="text"
+                        value={formData?.phoneNumber}
+                        onChange={(e) => {
+                          setFormData((p) => {
+                            return { ...p, phoneNumber: e.target.value };
+                          });
+                        }}
                         className=" w-[213px]  bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
                       />
                     </div>
@@ -201,10 +209,35 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                       <h2 className="whitespace-nowrap">Serial Number</h2>
                       <input
                         type="text"
+                        value={selectedSerial}
                         className=" w-[385px] bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
                       />
                     </div>
-                    <div className=" bg-white w-[767px] h-[114px]"></div>
+                    <div className=" w-[714px] h-[164px] flex flex-col custom-scrollbar overflow-scroll  p-[12px]">
+                      <div className=" bg-[#EFEFEF] active-card p-[12px] h-fit ">
+                        <div className=" bg-[#EFEFEF] flex flex-col px-[23px]">
+                          {mockSerial.map((e) => {
+                            return (
+                              <p
+                                onClick={() => {
+                                  setSelectedSerial(e);
+                                  setFormData((p) => {
+                                    return { ...p, serialNumber: e };
+                                  });
+                                }}
+                                className={`${
+                                  e === selectedSerial
+                                    ? "bg-[#656565] text-white"
+                                    : "hover:bg-[#656565]/20"
+                                } cursor-pointer  w-full text-center text-[20px] font-semibold border-b-[2px] border-[#707070]/36`}
+                              >
+                                {e}
+                              </p>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className=" space-y-[25px] ">
@@ -214,6 +247,12 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                       <h2>Phone Number</h2>
                       <input
                         type="text"
+                        value={formData?.simcardPhoneNumber}
+                        onChange={(e) => {
+                          setFormData((p) => {
+                            return { ...p, simcardPhoneNumber: e.target.value };
+                          });
+                        }}
                         className=" bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
                       />
                     </div>
@@ -221,12 +260,24 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                       <h2>IMEI</h2>
                       <input
                         type="text"
+                        value={formData?.imei}
+                        onChange={(e) => {
+                          setFormData((p) => {
+                            return { ...p, imei: e.target.value };
+                          });
+                        }}
                         className=" bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
                       />
                     </div>
                     <div className=" flex">
                       <h2>SIM Serial Number</h2>
                       <input
+                        value={formData?.simSerialNumber}
+                        onChange={(e) => {
+                          setFormData((p) => {
+                            return { ...p, simSerialNumber: e.target.value };
+                          });
+                        }}
                         type="text"
                         className=" w-10 bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
                       />
@@ -241,9 +292,7 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                     CANCEL
                   </button>
                   <button
-                    onClick={() => {
-                      setIsPopupOpen(true);
-                    }}
+                    onClick={handleSubmitForm}
                     className=" w-[225px] h-[69px] text-center styled text-[24px]"
                   >
                     ADD

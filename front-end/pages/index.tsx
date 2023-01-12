@@ -4,7 +4,6 @@ import {
   useJsApiLoader,
   Autocomplete,
   Polygon,
-  
 } from "@react-google-maps/api";
 
 import Interface from "../components/Interface";
@@ -431,9 +430,17 @@ export default function Home({ isLoggedin }: HomeProps) {
   // const fetcher = async (url) => await api.get(url).then((res) => res.data);
   // const { data, error } = useSWR(address, fetcher);
   // console.log(data);
+  const libraries: (
+    | "drawing"
+    | "geometry"
+    | "localContext"
+    | "places"
+    | "visualization"
+  )[] = ["places"];
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: "AIzaSyCTd-4w5z5_-dQtt6U1_dK-lWXRQVSjgGU",
+    libraries: libraries,
   });
   const [map, setMap] = useState(null);
   const onLoad = useCallback(function callback(map) {
@@ -468,7 +475,6 @@ export default function Home({ isLoggedin }: HomeProps) {
   const closeAddDevicePopup = () => {
     setIsAddDevice(false);
   };
-
 
   return (
     <>
