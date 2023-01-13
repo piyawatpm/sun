@@ -23,10 +23,15 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
   const fetcherClient = async (url) =>
     await axios.get(url).then((res) => res.data);
   const { data: clients } = useSWR(addressClient, fetcherClient);
+
   const addressLocations = `http://103.170.142.47:8000/api/v1/location`;
   const fetcherLocation = async (url) =>
-    await axios.get(url).then((res) => res.data);
+    await axios.get(url).then((res) => {
+      res.data.pop();
+      return res.data;
+    });
   const { data: location } = useSWR(addressLocations, fetcherLocation);
+
   const modifiedData = useMemo(() => {
     if (filteredByClient === 0) return deviceGroup;
     let output;

@@ -3,9 +3,10 @@ import {
   LoadScript,
   StandaloneSearchBox,
 } from "@react-google-maps/api";
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import Minimap from "./Minimap";
-
+import useSWR from "swr";
 type AddDeviceProps = {
   closeAddDevicePopup: () => void;
 };
@@ -34,6 +35,16 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [autocomplete, setAutocomplete] = useState();
   const [selectedSerial, setSelectedSerial] = useState<string>();
+  const [allSerial, setAllSerial] = useState<string[]>();
+  const addressSerial = `http://103.170.142.47:8000/api/v1/avaliableDevice`;
+  const fetcherSerial = async (url) =>
+    await axios.get(url).then((res) => {
+      return res.data;
+    });
+  const { data: serialFromApi } = useSWR(addressSerial, fetcherSerial);
+  useEffect(() => {
+    if (serialFromApi) setAllSerial(serialFromApi.map((e) => e.serial));
+  }, [serialFromApi]);
   const onLoad = (autocomplete) => {
     console.log("autocomplete: ", autocomplete);
 
@@ -56,17 +67,19 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
       });
     }
   };
-  const mockSerial = [
-    "SN-34235235-121214535-561",
-    "SN-34235235-121214535-562",
-    "SN-34235235-121214535-563",
-    "SN-34235235-121214535-564",
-    "SN-34235235-121214535-565",
-    "SN-34235235-121214535-566",
-    "SN-34235235-121214535-567",
-  ];
+
   const handleSubmitForm = () => {
     console.log(formData);
+    axios
+      .post("http://103.170.142.47:8000/api/v1/addDevice", {
+        ...formData,
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
   return (
     <div className=" z-20    bg-black/[45%] fixed inset-0  items-center justify-center font-bold">
@@ -216,25 +229,26 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                     <div className=" w-[714px] h-[164px] flex flex-col custom-scrollbar overflow-scroll  p-[12px]">
                       <div className=" bg-[#EFEFEF] active-card p-[12px] h-fit ">
                         <div className=" bg-[#EFEFEF] flex flex-col px-[23px]">
-                          {mockSerial.map((e) => {
-                            return (
-                              <p
-                                onClick={() => {
-                                  setSelectedSerial(e);
-                                  setFormData((p) => {
-                                    return { ...p, serialNumber: e };
-                                  });
-                                }}
-                                className={`${
-                                  e === selectedSerial
-                                    ? "bg-[#656565] text-white"
-                                    : "hover:bg-[#656565]/20"
-                                } cursor-pointer  w-full text-center text-[20px] font-semibold border-b-[2px] border-[#707070]/36`}
-                              >
-                                {e}
-                              </p>
-                            );
-                          })}
+                          {allSerial &&
+                            allSerial.map((e) => {
+                              return (
+                                <p
+                                  onClick={() => {
+                                    setSelectedSerial(e);
+                                    setFormData((p) => {
+                                      return { ...p, serialNumber: e };
+                                    });
+                                  }}
+                                  className={`${
+                                    e === selectedSerial
+                                      ? "bg-[#656565] text-white"
+                                      : "hover:bg-[#656565]/20"
+                                  } cursor-pointer  w-full text-center text-[20px] font-semibold border-b-[2px] border-[#707070]/36`}
+                                >
+                                  {e}
+                                </p>
+                              );
+                            })}
                         </div>
                       </div>
                     </div>
