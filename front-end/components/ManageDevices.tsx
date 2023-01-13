@@ -6,17 +6,31 @@ import {
 } from "@material-tailwind/react";
 import DeviceCards from "./DeviceCards";
 import DeviceDashboard from "./DeviceDashboard";
+import axios from "axios";
+import useSWR from "swr";
 enum MenuState {
   DeviceDashboard,
   RentalManagement,
   DeviceManager,
   SimLog,
 }
-const ManageDevices = () => {
+const ManageDevices = ({ closeDeviceManage, mockGroup }) => {
   const [menuState, setMenuState] = useState<MenuState>(
     MenuState.DeviceDashboard
   );
   const [open, setOpen] = useState(true);
+  const [currentDevice, setCurrentDevice] = useState(
+    mockGroup?.device_serials[0]
+  );
+
+  const addressDevice = `http://103.170.142.47:8000/api/v1/device/${currentDevice}`;
+  const fetcherDevice = async (url) =>
+    await axios.get(url).then((res) => {
+      console.log(res.data);
+      return res.data;
+    });
+  const { data: deviceData } = useSWR(addressDevice, fetcherDevice);
+
   const handleOpen = () => {
     setOpen((e) => !e);
   };
@@ -49,7 +63,6 @@ const ManageDevices = () => {
       </svg>
     );
   }
-  const testArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   return (
     <Accordion
       open={open}
@@ -62,9 +75,10 @@ const ManageDevices = () => {
         onClick={handleOpen}
         className=" w-full flex py-[16px] px-[33px] items-center bg-[#9B9B9B] justify-between rounded-t-[10px]"
       >
-        <img src="/images/left.png" alt="" />
+        <img onClick={closeDeviceManage} src="/images/left.png" alt="" />
+
         <p className=" text-[24px]  font-semibold   text-white">
-          9 Av. Elisa Mercœur
+          {mockGroup.name}
         </p>
       </AccordionHeader>
 
@@ -73,15 +87,15 @@ const ManageDevices = () => {
           <div className=" flex flex-col py-3 w-full pl-3 text-[16px] font-bold bg-[#F5F5F5] rounded-[6px] shadow-md border-t-[3px] border-l-[3px]  border-white shadow-gray-300">
             <div className=" flex space-x-2">
               <p>CLIENT NAME:</p>
-              <p className="text-[#636363]"> Andrew Watson</p>
+              <p className="text-[#636363]"> {mockGroup.client}</p>
             </div>
             <div className=" flex space-x-2">
               <p>DIVICE NAME:</p>
-              <p className="text-[#636363]">ALPHA-11</p>
+              <p className="text-[#636363]">{deviceData?.name}</p>
             </div>
             <div className=" flex space-x-2">
               <p>SN:</p>
-              <p className="text-[#636363]">34235235-121214535-561</p>
+              <p className="text-[#636363]">{deviceData?.serial}</p>
             </div>
           </div>
           <div className=" bg-white py-[20px] rounded-[10px] h-full flex flex-col items-center justify-around">
@@ -125,8 +139,15 @@ const ManageDevices = () => {
           </div>
           <div className=" w-[373px] h-full bg-[#F5F5F5] shadow-md   border-white shadow-gray-30 border-t-[3px] border-l-[3px] rounded-[6px] px-3 py-[15px] ml-auto">
             <div className=" rounded-[6px] active-card   w-full  overflow-scroll custom-scrollbar small pl-[18px] py-[21px] h-full space-y-[20px] ">
-              {testArr.map((e) => {
-                return <DeviceCards />;
+              {mockGroup.device_serials.map((e, index) => {
+                return (
+                  <DeviceCards
+                    currentDevice={currentDevice}
+                    deviceNumber={index + 1}
+                    deviceSerial={e}
+                    setCurrentDevice={setCurrentDevice}
+                  />
+                );
               })}
             </div>
           </div>

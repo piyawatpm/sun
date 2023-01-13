@@ -475,15 +475,27 @@ export default function Home({ isLoggedin }: HomeProps) {
   const closeAddDevicePopup = () => {
     setIsAddDevice(false);
   };
-
+  const closeDeviceManage = () => {
+    setIsDashboardOpen(false);
+  };
+  const mockGroup = {
+    id: 1,
+    name: "group-1",
+    lat: 48.88173,
+    lng: 2.384828,
+    email: null,
+    phone: null,
+    location: 1,
+    client: 1,
+    total_devices: 2,
+    online_devices: 0,
+    offline_devices: 2,
+    warning_devices: 0,
+    device_serials: ["56VKO8377", "W5K1PQB2B"],
+  };
   return (
     <>
       <div style={{ height: "100vh", width: "100%", position: "relative" }}>
-        {isLogin ? (
-          <Interface map={map} openAddDevicePopup={openAddDevicePopup} />
-        ) : (
-          <Login login={setIsLogin} />
-        )}
         {isAddDevice && <AddDevice closeAddDevicePopup={closeAddDevicePopup} />}
         <button
           onClick={() => {
@@ -493,7 +505,18 @@ export default function Home({ isLoggedin }: HomeProps) {
         >
           Dashboard Toggle
         </button>
-        {isDashboardOpen && <ManageDevices />}
+
+        {isDashboardOpen ? (
+          <ManageDevices mockGroup={mockGroup} closeDeviceManage={closeDeviceManage} />
+        ) : isLogin ? (
+          <Interface
+            setIsDashboardOpen={setIsDashboardOpen}
+            map={map}
+            openAddDevicePopup={openAddDevicePopup}
+          />
+        ) : (
+          <Login login={setIsLogin} />
+        )}
         {isLoaded && (
           <GoogleMap
             mapContainerStyle={containerStyle}

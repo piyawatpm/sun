@@ -9,11 +9,12 @@ import { useMemo } from "react";
 import useSWR from "swr";
 type View = "overall" | string;
 
-const districtTab = ({ openAddDevicePopup, map }: any) => {
+const districtTab = ({ openAddDevicePopup, map, setIsDashboardOpen }: any) => {
   const [viewState, setViewState] = useState<View>("overall");
   const [selectDistrict, setSelectDistrict] = useState<string>();
   const [filteredByClient, setFilteredByClient] = useState();
   const [renderedMarker, setRenderedMarker] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState();
 
   const addressDeviceGroup = `http://103.170.142.47:8000/api/v1/deviceGroup`;
   const fetcherDevice = async (url) =>
@@ -171,7 +172,11 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
       } else e.setProperty("isSelected", false);
     });
   }, [selectDistrict]);
-
+  const openDeviceManager = (i) => {
+    setSelectedGroup(i);
+    setIsDashboardOpen((p) => !p);
+  };
+ 
   return (
     <div
       onClick={() => {
@@ -228,7 +233,7 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
             {Object.entries(devicesByDistrict).map(([key, value]) => {
               return (
                 <District
-                  selectedDistrict={selectedDistrict}
+                  doubleClick={selectedDistrict}
                   key={key}
                   selectDistrict={selectDistrict}
                   setSelectDistrict={setSelectDistrict}
@@ -258,7 +263,7 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
                 return (
                   <>
                     <District
-                      selectedDistrict={selectedDistrict}
+                      doubleClick={openDeviceManager}
                       key={e.id}
                       selectDistrict={selectDistrict}
                       setSelectDistrict={setSelectDistrict}

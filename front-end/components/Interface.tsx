@@ -10,8 +10,9 @@ enum Tab {
 type InterfaceProps = {
   openAddDevicePopup: () => void;
   map: any;
+  setIsDashboardOpen:any
 };
-const Interface = ({ openAddDevicePopup, map }: InterfaceProps) => {
+const Interface = ({ openAddDevicePopup, map ,setIsDashboardOpen}: InterfaceProps) => {
   const [tab, setTab] = useState<Tab>(Tab.overview);
   const resetMap = () => {
     map.data.forEach(function (feature) {
@@ -54,7 +55,7 @@ const Interface = ({ openAddDevicePopup, map }: InterfaceProps) => {
       {tab === Tab.overview ? (
         <OverviewTab />
       ) : (
-        <DistrictTab map={map} openAddDevicePopup={openAddDevicePopup} />
+        <DistrictTab setIsDashboardOpen={setIsDashboardOpen} map={map} openAddDevicePopup={openAddDevicePopup} />
       )}
     </div>
   );
