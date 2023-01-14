@@ -7,6 +7,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Minimap from "./Minimap";
 import useSWR from "swr";
+import MyCombobox from "./MyCombobox";
 type AddDeviceProps = {
   closeAddDevicePopup: () => void;
 };
@@ -36,12 +37,19 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
   const [autocomplete, setAutocomplete] = useState();
   const [selectedSerial, setSelectedSerial] = useState<string>();
   const [allSerial, setAllSerial] = useState<string[]>();
+
   const addressSerial = `http://103.170.142.47:8000/api/v1/avaliableDevice`;
   const fetcherSerial = async (url) =>
     await axios.get(url).then((res) => {
       return res.data;
     });
   const { data: serialFromApi } = useSWR(addressSerial, fetcherSerial);
+
+  const addressClient = `http://103.170.142.47:8000/api/v1/client`;
+  const fetcherClient = async (url) =>
+    await axios.get(url).then((res) => res.data);
+  const { data: clients } = useSWR(addressClient, fetcherClient);
+
   useEffect(() => {
     if (serialFromApi) setAllSerial(serialFromApi.map((e) => e.serial));
   }, [serialFromApi]);
@@ -81,6 +89,12 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
         console.log(error);
       });
   };
+  const getClientName = (targetClient) => {
+    setFormData((p) => {
+      return { ...p, clientName: targetClient };
+    });
+  };
+  const clientList = clients?.map((e) => e.name);
   return (
     <div className=" z-20    bg-black/[45%] fixed inset-0  items-center justify-center font-bold">
       <div className=" flex items-center justify-center h-full  scale-75 3xl:scale-100">
@@ -139,6 +153,7 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                     </div>
                     <div className=" flex">
                       <h2>Client Name</h2>
+                      {/* 
                       <input
                         type="text"
                         value={formData?.clientName}
@@ -148,7 +163,15 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                           });
                         }}
                         className=" bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
-                      />
+                      /> */}
+                      {clients && (
+                        <MyCombobox
+                          filteredByClients={getClientName}
+                          clients={[...clientList]}
+                          isFilter={false}
+                          className="w-full border-none  outline-none pl-3 pr-10 text-[20px] font-bold leading-5 text-gray-900 focus:ring-0 bg-[#F5F5F5]"
+                        />
+                      )}
                     </div>
                   </div>
                 </div>

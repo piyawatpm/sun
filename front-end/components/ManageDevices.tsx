@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionHeader,
@@ -14,19 +14,18 @@ enum MenuState {
   DeviceManager,
   SimLog,
 }
-const ManageDevices = ({ closeDeviceManage, mockGroup }) => {
+const ManageDevices = ({ closeDeviceManage, selectedGroup }) => {
   const [menuState, setMenuState] = useState<MenuState>(
     MenuState.DeviceDashboard
   );
   const [open, setOpen] = useState(true);
   const [currentDevice, setCurrentDevice] = useState(
-    mockGroup?.device_serials[0]
+    selectedGroup?.device_serials[0]
   );
 
   const addressDevice = `http://103.170.142.47:8000/api/v1/device/${currentDevice}`;
   const fetcherDevice = async (url) =>
     await axios.get(url).then((res) => {
-      console.log(res.data);
       return res.data;
     });
   const { data: deviceData } = useSWR(addressDevice, fetcherDevice);
@@ -78,7 +77,7 @@ const ManageDevices = ({ closeDeviceManage, mockGroup }) => {
         <img onClick={closeDeviceManage} src="/images/left.png" alt="" />
 
         <p className=" text-[24px]  font-semibold   text-white">
-          {mockGroup.name}
+          {selectedGroup.name}
         </p>
       </AccordionHeader>
 
@@ -87,7 +86,7 @@ const ManageDevices = ({ closeDeviceManage, mockGroup }) => {
           <div className=" flex flex-col py-3 w-full pl-3 text-[16px] font-bold bg-[#F5F5F5] rounded-[6px] shadow-md border-t-[3px] border-l-[3px]  border-white shadow-gray-300">
             <div className=" flex space-x-2">
               <p>CLIENT NAME:</p>
-              <p className="text-[#636363]"> {mockGroup.client}</p>
+              <p className="text-[#636363]"> {selectedGroup.client}</p>
             </div>
             <div className=" flex space-x-2">
               <p>DIVICE NAME:</p>
@@ -139,7 +138,7 @@ const ManageDevices = ({ closeDeviceManage, mockGroup }) => {
           </div>
           <div className=" w-[373px] h-full bg-[#F5F5F5] shadow-md   border-white shadow-gray-30 border-t-[3px] border-l-[3px] rounded-[6px] px-3 py-[15px] ml-auto">
             <div className=" rounded-[6px] active-card   w-full  overflow-scroll custom-scrollbar small pl-[18px] py-[21px] h-full space-y-[20px] ">
-              {mockGroup.device_serials.map((e, index) => {
+              {selectedGroup.device_serials.map((e, index) => {
                 return (
                   <DeviceCards
                     currentDevice={currentDevice}

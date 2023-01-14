@@ -1,7 +1,7 @@
-import { Fragment, ReactElement, useEffect, useState } from "react";
+import { Fragment, ReactElement, useContext, useEffect, useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
-import { mockArea } from "../pages";
+import { groupContext, mockArea } from "../pages";
 import District from "./DistrictCard";
 import MyCombobox from "./MyCombobox";
 import axios from "axios";
@@ -9,17 +9,19 @@ import { useMemo } from "react";
 import useSWR from "swr";
 type View = "overall" | string;
 
-const districtTab = ({ openAddDevicePopup, map, setIsDashboardOpen }: any) => {
+const districtTab = ({ openAddDevicePopup, map }: any) => {
+  const [setSelectedGroup, setIsDashboardOpen] = useContext(groupContext);
+
   const [viewState, setViewState] = useState<View>("overall");
   const [selectDistrict, setSelectDistrict] = useState<string>();
   const [filteredByClient, setFilteredByClient] = useState();
   const [renderedMarker, setRenderedMarker] = useState([]);
-  const [selectedGroup, setSelectedGroup] = useState();
 
   const addressDeviceGroup = `http://103.170.142.47:8000/api/v1/deviceGroup`;
   const fetcherDevice = async (url) =>
     await axios.get(url).then((res) => res.data);
   const { data: deviceGroup } = useSWR(addressDeviceGroup, fetcherDevice);
+
   const addressClient = `http://103.170.142.47:8000/api/v1/client`;
   const fetcherClient = async (url) =>
     await axios.get(url).then((res) => res.data);
@@ -28,16 +30,25 @@ const districtTab = ({ openAddDevicePopup, map, setIsDashboardOpen }: any) => {
   const addressLocations = `http://103.170.142.47:8000/api/v1/location`;
   const fetcherLocation = async (url) =>
     await axios.get(url).then((res) => {
+      console.log(res.data);
+      res.data.shift();
       res.data.pop();
+      console.log(res.data);
       return res.data;
     });
   const { data: location } = useSWR(addressLocations, fetcherLocation);
 
   const modifiedData = useMemo(() => {
-    if (filteredByClient === 0) return deviceGroup;
+    if (filteredByClient === "All") return deviceGroup;
     let output;
     if (deviceGroup) {
-      output = deviceGroup.filter((e) => e.client === filteredByClient);
+      console.log(deviceGroup);
+      output = deviceGroup.filter((e) => {
+        return (
+          e.client === clients.filter((r) => r.name === filteredByClient)[0]?.id
+        );
+      });
+      console.log(output);
     }
     return output;
   }, [deviceGroup, filteredByClient]);
@@ -173,26 +184,21 @@ const districtTab = ({ openAddDevicePopup, map, setIsDashboardOpen }: any) => {
     });
   }, [selectDistrict]);
   const openDeviceManager = (i) => {
-    setSelectedGroup(i);
+    setSelectedGroup(filteredByDistrict.filter((group) => group.name === i)[0]);
     setIsDashboardOpen((p) => !p);
   };
- 
+  const clientList = clients?.map((e) => e.name);
   return (
-    <div
-      onClick={() => {
-        map.data.forEach((e) => {
-          console.log(e);
-        });
-      }}
-      className=" flex  flex-col pb-6 px-3 h-full bg-[#F5F5F5] rounded-b-md  "
-    >
+    <div className=" flex  flex-col pb-6 px-3 h-full bg-[#F5F5F5] rounded-b-md  ">
       <div className=" w-full flex  min-h-[104px] pt-8 pb-[18px] pl-[30px]  ">
         {viewState === "overall" ? (
           <>
             {clients && (
               <MyCombobox
                 filteredByClients={filteredByClients}
-                clients={[{ id: 0, name: "All" }, ...clients]}
+                clients={["All", ...clientList]}
+                isFilter={true}
+                className="w-full outline-none border-none py-2 pl-3 pr-10 text-[20px] font-bold leading-5 text-gray-900 focus:ring-0 bg-[#F5F5F5]"
               />
             )}
             <div className=" text-left flex items-start ml-[30px]">

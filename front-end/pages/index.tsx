@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, createContext } from "react";
 import {
   GoogleMap,
   useJsApiLoader,
@@ -350,86 +350,9 @@ const mockArea2 = [
   },
 ];
 export const mockDistrict = ["area1", "area2", "area3"];
-export const filterDistrict = (deviceArr = {}, districtArr = {}) => {
-  return {
-    area1: {
-      g1: [
-        {
-          group: "g1",
-          deviceId: 1,
-          status: "online",
-          cellHours: 1075,
-          oxyHours: 2012,
-          district: "area1",
-          client: "client1",
-          isWarning: true,
-          isMaintencence: false,
-        },
-        {
-          group: "g1",
-          deviceId: 2,
-          status: "offline",
-          cellHours: 1453,
-          oxyHours: 3042,
-          district: "area1",
-          client: "client1",
-          isWarning: false,
-          isMaintencence: false,
-        },
-      ],
-    },
-
-    area2: {
-      g2: [
-        {
-          group: "g2",
-          deviceId: 3,
-          status: "online",
-          cellHours: 5012,
-          oxyHours: 1053,
-          district: "area2",
-          client: "client2",
-          isWarning: false,
-          isMaintencence: false,
-        },
-      ],
-    },
-
-    area3: {
-      g3: [
-        {
-          group: "g3",
-          deviceId: 4,
-          status: "offline",
-          cellHours: 1661,
-          oxyHours: 3212,
-          district: "area3",
-          client: "client3",
-          isWarning: false,
-          isMaintencence: true,
-        },
-      ],
-      g4: [
-        {
-          group: "g4",
-          deviceId: 5,
-          status: "offline",
-          cellHours: 60220,
-          oxyHours: 2240,
-          district: "area3",
-          client: "client4",
-          isWarning: true,
-        },
-      ],
-    },
-  };
-};
+export const groupContext = createContext(null);
 
 export default function Home({ isLoggedin }: HomeProps) {
-  // const address = `http://103.170.142.47:8000/api/v1/location`;
-  // const fetcher = async (url) => await api.get(url).then((res) => res.data);
-  // const { data, error } = useSWR(address, fetcher);
-  // console.log(data);
   const libraries: (
     | "drawing"
     | "geometry"
@@ -458,6 +381,7 @@ export default function Home({ isLoggedin }: HomeProps) {
   const [isLogin, setIsLogin] = useState(isLoggedin);
   const [isAddDevice, setIsAddDevice] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState("test");
 
   const containerStyle = {
     width: "100vw",
@@ -495,42 +419,37 @@ export default function Home({ isLoggedin }: HomeProps) {
   };
   return (
     <>
-      <div style={{ height: "100vh", width: "100%", position: "relative" }}>
-        {isAddDevice && <AddDevice closeAddDevicePopup={closeAddDevicePopup} />}
-        <button
-          onClick={() => {
-            setIsDashboardOpen((p) => !p);
-          }}
-          className=" absolute top-0 left-0 bg-white z-10 mt-2 ml-2 rounded-full p-2 px-3 font-extrabold"
-        >
-          Dashboard Toggle
-        </button>
+      <groupContext.Provider value={[setSelectedGroup, setIsDashboardOpen]}>
+        <div style={{ height: "100vh", width: "100%", position: "relative" }}>
+          {isAddDevice && (
+            <AddDevice closeAddDevicePopup={closeAddDevicePopup} />
+          )}
 
-        {isDashboardOpen ? (
-          <ManageDevices mockGroup={mockGroup} closeDeviceManage={closeDeviceManage} />
-        ) : isLogin ? (
-          <Interface
-            setIsDashboardOpen={setIsDashboardOpen}
-            map={map}
-            openAddDevicePopup={openAddDevicePopup}
-          />
-        ) : (
-          <Login login={setIsLogin} />
-        )}
-        {isLoaded && (
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={center}
-            // zoom={10}
-            // options={{
-            //   styles: [{ stylers: [{ saturation: 50 }, { gamma: 0.5 }] }],
-            // }}
-            onLoad={onLoad}
-            onUnmount={onUnmount}
-          >
-            {/* Child components, such as markers, info windows, etc. */}
+          {isDashboardOpen && (
+            <ManageDevices
+              selectedGroup={selectedGroup}
+              closeDeviceManage={closeDeviceManage}
+            />
+          )}
+          {isLogin ? (
+            <Interface map={map} openAddDevicePopup={openAddDevicePopup} isVisible={!isDashboardOpen} />
+          ) : (
+            <Login login={setIsLogin} />
+          )}
+          {isLoaded && (
+            <GoogleMap
+              mapContainerStyle={containerStyle}
+              center={center}
+              // zoom={10}
+              // options={{
+              //   styles: [{ stylers: [{ saturation: 50 }, { gamma: 0.5 }] }],
+              // }}
+              onLoad={onLoad}
+              onUnmount={onUnmount}
+            >
+              {/* Child components, such as markers, info windows, etc. */}
 
-            {/* <Polygon
+              {/* <Polygon
               onLoad={onLoad}
               paths={[
                 { lat: 25.774, lng: -80.19 },
@@ -551,11 +470,12 @@ export default function Home({ isLoggedin }: HomeProps) {
                 zIndex: 1,
               }}
             /> */}
-          </GoogleMap>
-        )}
+            </GoogleMap>
+          )}
 
-        <Time />
-      </div>
+          <Time />
+        </div>
+      </groupContext.Provider>
     </>
   );
 }

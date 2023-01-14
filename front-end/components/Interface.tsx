@@ -10,9 +10,9 @@ enum Tab {
 type InterfaceProps = {
   openAddDevicePopup: () => void;
   map: any;
-  setIsDashboardOpen:any
+  isVisible: boolean;
 };
-const Interface = ({ openAddDevicePopup, map ,setIsDashboardOpen}: InterfaceProps) => {
+const Interface = ({ openAddDevicePopup, map, isVisible }: InterfaceProps) => {
   const [tab, setTab] = useState<Tab>(Tab.overview);
   const resetMap = () => {
     map.data.forEach(function (feature) {
@@ -22,7 +22,11 @@ const Interface = ({ openAddDevicePopup, map ,setIsDashboardOpen}: InterfaceProp
     });
   };
   return (
-    <div className=" w-[586px] h-[888px] absolute z-10 my-auto  translate-y-[-53%] 3xl:translate-y-[-53%] top-1/2  left-[5%]  scale-75 3xl:scale-100  ">
+    <div
+      className={` ${
+        !isVisible && "invisible"
+      } w-[586px] h-[888px] absolute z-10 my-auto  translate-y-[-53%] 3xl:translate-y-[-53%] top-1/2  left-[5%]  scale-75 3xl:scale-100  `}
+    >
       <div className=" flex text-center  text-white h-[64px]  text-[24px] font-semibold ">
         <div
           onClick={() => {
@@ -55,7 +59,7 @@ const Interface = ({ openAddDevicePopup, map ,setIsDashboardOpen}: InterfaceProp
       {tab === Tab.overview ? (
         <OverviewTab />
       ) : (
-        <DistrictTab setIsDashboardOpen={setIsDashboardOpen} map={map} openAddDevicePopup={openAddDevicePopup} />
+        <DistrictTab map={map} openAddDevicePopup={openAddDevicePopup} />
       )}
     </div>
   );
