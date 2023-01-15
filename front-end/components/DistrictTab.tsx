@@ -31,9 +31,7 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
   const fetcherLocation = async (url) =>
     await axios.get(url).then((res) => {
       console.log(res.data);
-      res.data.shift();
-      res.data.pop();
-      console.log(res.data);
+
       return res.data;
     });
   const { data: location } = useSWR(addressLocations, fetcherLocation);
@@ -54,6 +52,7 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
   }, [deviceGroup, filteredByClient]);
   const devicesByDistrict = useMemo(() => {
     if (!modifiedData) return [];
+
     const grouped = modifiedData.reduce((prev, cur) => {
       return prev[cur.location]
         ? { ...prev, [cur.location]: [...prev[cur.location], cur] }
@@ -115,7 +114,6 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
     }
   }, [viewState]);
 
-  //   setViewState("DevicesView");
   // };
   // const changeToDistrictList = () => {
   //   setViewState("overall");

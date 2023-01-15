@@ -402,21 +402,7 @@ export default function Home({ isLoggedin }: HomeProps) {
   const closeDeviceManage = () => {
     setIsDashboardOpen(false);
   };
-  const mockGroup = {
-    id: 1,
-    name: "group-1",
-    lat: 48.88173,
-    lng: 2.384828,
-    email: null,
-    phone: null,
-    location: 1,
-    client: 1,
-    total_devices: 2,
-    online_devices: 0,
-    offline_devices: 2,
-    warning_devices: 0,
-    device_serials: ["56VKO8377", "W5K1PQB2B"],
-  };
+ 
   return (
     <>
       <groupContext.Provider value={[setSelectedGroup, setIsDashboardOpen]}>

@@ -20,8 +20,8 @@ type FormData = {
     lat: number;
     lng: number;
   };
-  email: string;
-  phoneNumber: string;
+  locationEmail: string;
+  locationPhoneNumber: string;
   serialNumber: string;
   simcardPhoneNumber: string;
   imei: string;
@@ -214,10 +214,10 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                       <h2>Email</h2>
                       <input
                         type="text"
-                        value={formData?.email}
+                        value={formData?.locationEmail}
                         onChange={(e) => {
                           setFormData((p) => {
-                            return { ...p, email: e.target.value };
+                            return { ...p, locationEmail: e.target.value };
                           });
                         }}
                         className="  w-[213px] bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
@@ -227,10 +227,13 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                       <h2>Phone Number</h2>
                       <input
                         type="text"
-                        value={formData?.phoneNumber}
+                        value={formData?.locationPhoneNumber}
                         onChange={(e) => {
                           setFormData((p) => {
-                            return { ...p, phoneNumber: e.target.value };
+                            return {
+                              ...p,
+                              locationPhoneNumber: e.target.value,
+                            };
                           });
                         }}
                         className=" w-[213px]  bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
