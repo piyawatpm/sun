@@ -1,8 +1,4 @@
-import {
-  Autocomplete,
-  LoadScript,
-  StandaloneSearchBox,
-} from "@react-google-maps/api";
+import { Autocomplete } from "@react-google-maps/api";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Minimap from "./Minimap";
@@ -28,12 +24,9 @@ type FormData = {
   simSerialNumber: string;
 };
 const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
-  const [isMinimapOpen, setIsMinimapOpen] = useState<boolean>(false);
-  const openMap = () => {
-    setIsMinimapOpen((p) => !p);
-  };
   const [formData, setFormData] = useState<FormData>();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
   const [autocomplete, setAutocomplete] = useState();
   const [selectedSerial, setSelectedSerial] = useState<string>();
   const [allSerial, setAllSerial] = useState<string[]>();
@@ -77,16 +70,17 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
   };
 
   const handleSubmitForm = () => {
-    console.log(formData);
     axios
       .post("http://103.170.142.47:8000/api/v1/addDevice", {
         ...formData,
       })
       .then(function (response) {
-        console.log(response);
+        setIsPopupOpen(true);
+        setIsComplete(true);
       })
       .catch(function (error) {
-        console.log(error);
+        setIsPopupOpen(true);
+        setIsComplete(false);
       });
   };
   const getClientName = (targetClient) => {
@@ -99,18 +93,14 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
     <div className=" z-20    bg-black/[45%] fixed inset-0  items-center justify-center font-bold">
       <div className=" flex items-center justify-center h-full  scale-75 3xl:scale-100">
         <div className=" w-[1548px] h-[990px] bg-[#F5F5F5] px-[125px] py-[55px]  relative rounded-[10px]">
-          <button
-            onClick={openMap}
-            className=" bg-black text-white rounded-full p-2 absolute top-0 right-0"
-          >
-            Open Map
-          </button>
           {isPopupOpen && (
             <div className=" z-10 absolute bg-black/[45%] inset-0">
               <div className=" bg-white w-[585px] h-[260px] rounded-[5px] top-1/2 left-1/2 absolute translate-x-[-50%]  translate-y-[-50%] flex flex-col items-center justify-center space-y-10">
-                <h1 className=" text-[28px] font-bold">DEVICE ADDED</h1>
+                <h1 className=" text-[28px] font-bold">
+                  {isComplete ? "DEVICE ADDED" : "FAIL TO ADD DEVICE"}
+                </h1>
                 <img
-                  src="images/success.png"
+                  src={`images/${isComplete ? "success" : "fail"}.png`}
                   onClick={() => {
                     setIsPopupOpen(false);
                   }}
@@ -120,40 +110,34 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
               </div>
             </div>
           )}
-          {isMinimapOpen ? (
-            // <Minimap />
-            <></>
-          ) : (
-            <>
-              {" "}
-              <div className=" flex justify-center items-center space-x-2">
-                <h1 className=" text-center text-[28px] ">ADD NEW DEVICE</h1>
-                <img
-                  src="/images/machine.png"
-                  className=" w-[26px] h-[34px]"
-                  alt=""
-                />
-              </div>
-              <div className="flex flex-col space-y-[40px]">
-                <div className=" space-y-[25px]">
-                  <h1 className="text-[22px] ">Basic Information</h1>
-                  <div className=" text-[#656565] flex text-[20px] space-x-10">
-                    <div className=" flex">
-                      <h2>Device Name</h2>
-                      <input
-                        value={formData?.deviceName}
-                        onChange={(e) => {
-                          setFormData((p) => {
-                            return { ...p, deviceName: e.target.value };
-                          });
-                        }}
-                        type="text"
-                        className=" bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
-                      />
-                    </div>
-                    <div className=" flex">
-                      <h2>Client Name</h2>
-                      {/* 
+          <div className=" flex justify-center items-center space-x-2">
+            <h1 className=" text-center text-[28px] ">ADD NEW DEVICE</h1>
+            <img
+              src="/images/machine.png"
+              className=" w-[26px] h-[34px]"
+              alt=""
+            />
+          </div>
+          <div className="flex flex-col space-y-[40px]">
+            <div className=" space-y-[25px]">
+              <h1 className="text-[22px] ">Basic Information</h1>
+              <div className=" text-[#656565] flex text-[20px] space-x-10">
+                <div className=" flex">
+                  <h2>Device Name</h2>
+                  <input
+                    value={formData?.deviceName}
+                    onChange={(e) => {
+                      setFormData((p) => {
+                        return { ...p, deviceName: e.target.value };
+                      });
+                    }}
+                    type="text"
+                    className=" bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
+                  />
+                </div>
+                <div className=" flex">
+                  <h2>Client Name</h2>
+                  {/* 
                       <input
                         type="text"
                         value={formData?.clientName}
@@ -164,39 +148,39 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                         }}
                         className=" bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
                       /> */}
-                      {clients && (
-                        <MyCombobox
-                          filteredByClients={getClientName}
-                          clients={[...clientList]}
-                          isFilter={false}
-                          className="w-full border-none  outline-none pl-3 pr-10 text-[20px] font-bold leading-5 text-gray-900 focus:ring-0 bg-[#F5F5F5]"
-                        />
-                      )}
-                    </div>
-                  </div>
+                  {clients && (
+                    <MyCombobox
+                      filteredByClients={getClientName}
+                      clients={[...clientList]}
+                      isFilter={false}
+                      className="w-full border-none  outline-none pl-3 pr-10 text-[20px] font-bold leading-5 text-gray-900 focus:ring-0 bg-[#F5F5F5]"
+                    />
+                  )}
                 </div>
-                <div className=" space-y-[25px]">
-                  <h1 className="text-[22px] ">Location Information</h1>
+              </div>
+            </div>
+            <div className=" space-y-[25px]">
+              <h1 className="text-[22px] ">Location Information</h1>
 
-                  <div className=" text-[#656565] flex text-[20px] space-x-10">
-                    <div className=" flex w-full">
-                      <h2>Address</h2>
+              <div className=" text-[#656565] flex text-[20px] space-x-10">
+                <div className=" flex w-full">
+                  <h2>Address</h2>
 
-                      <Autocomplete
-                        onLoad={onLoad}
-                        onPlaceChanged={onPlacesChanged}
-                        className="w-full"
-                      >
-                        <input
-                          type="text"
-                          placeholder=""
-                          className=" w-full bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
-                        />
-                      </Autocomplete>
-                    </div>
-                  </div>
-                  <div className=" text-[#656565] flex text-[20px] space-x-10">
-                    {/* <div className=" flex">
+                  <Autocomplete
+                    onLoad={onLoad}
+                    onPlaceChanged={onPlacesChanged}
+                    className="w-full"
+                  >
+                    <input
+                      type="text"
+                      placeholder=""
+                      className=" w-full bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
+                    />
+                  </Autocomplete>
+                </div>
+              </div>
+              <div className=" text-[#656565] flex text-[20px] space-x-10">
+                {/* <div className=" flex">
                       <h2>city</h2>
                       <input
                         type="text"
@@ -210,137 +194,135 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                         className="  w-[110px] bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
                       />
                     </div> */}
-                    <div className=" flex">
-                      <h2>Email</h2>
-                      <input
-                        type="text"
-                        value={formData?.locationEmail}
-                        onChange={(e) => {
-                          setFormData((p) => {
-                            return { ...p, locationEmail: e.target.value };
-                          });
-                        }}
-                        className="  w-[213px] bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
-                      />
-                    </div>
-                    <div className=" flex">
-                      <h2>Phone Number</h2>
-                      <input
-                        type="text"
-                        value={formData?.locationPhoneNumber}
-                        onChange={(e) => {
-                          setFormData((p) => {
-                            return {
-                              ...p,
-                              locationPhoneNumber: e.target.value,
-                            };
-                          });
-                        }}
-                        className=" w-[213px]  bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
-                      />
-                    </div>
-                  </div>
+                <div className=" flex">
+                  <h2>Email</h2>
+                  <input
+                    type="text"
+                    value={formData?.locationEmail}
+                    onChange={(e) => {
+                      setFormData((p) => {
+                        return { ...p, locationEmail: e.target.value };
+                      });
+                    }}
+                    className="  w-[213px] bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
+                  />
                 </div>
-                <div className=" space-y-[25px]">
-                  <h1 className="text-[22px]  ">Device Serial Number </h1>
-                  <div className=" text-[#656565] flex text-[20px] space-x-10">
-                    <div className=" flex items-start ">
-                      <h2 className="whitespace-nowrap">Serial Number</h2>
-                      <input
-                        type="text"
-                        value={selectedSerial}
-                        className=" w-[385px] bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
-                      />
-                    </div>
-                    <div className=" w-[714px] h-[164px] flex flex-col custom-scrollbar overflow-scroll  p-[12px]">
-                      <div className=" bg-[#EFEFEF] active-card p-[12px] h-fit ">
-                        <div className=" bg-[#EFEFEF] flex flex-col px-[23px]">
-                          {allSerial &&
-                            allSerial.map((e) => {
-                              return (
-                                <p
-                                  onClick={() => {
-                                    setSelectedSerial(e);
-                                    setFormData((p) => {
-                                      return { ...p, serialNumber: e };
-                                    });
-                                  }}
-                                  className={`${
-                                    e === selectedSerial
-                                      ? "bg-[#656565] text-white"
-                                      : "hover:bg-[#656565]/20"
-                                  } cursor-pointer  w-full text-center text-[20px] font-semibold border-b-[2px] border-[#707070]/36`}
-                                >
-                                  {e}
-                                </p>
-                              );
-                            })}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className=" space-y-[25px] ">
-                  <h1 className="text-[22px] ">SIM Card Information</h1>
-                  <div className=" text-[#656565] flex text-[20px] space-x-10">
-                    <div className=" flex">
-                      <h2>Phone Number</h2>
-                      <input
-                        type="text"
-                        value={formData?.simcardPhoneNumber}
-                        onChange={(e) => {
-                          setFormData((p) => {
-                            return { ...p, simcardPhoneNumber: e.target.value };
-                          });
-                        }}
-                        className=" bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
-                      />
-                    </div>
-                    <div className=" flex">
-                      <h2>IMEI</h2>
-                      <input
-                        type="text"
-                        value={formData?.imei}
-                        onChange={(e) => {
-                          setFormData((p) => {
-                            return { ...p, imei: e.target.value };
-                          });
-                        }}
-                        className=" bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
-                      />
-                    </div>
-                    <div className=" flex">
-                      <h2>SIM Serial Number</h2>
-                      <input
-                        value={formData?.simSerialNumber}
-                        onChange={(e) => {
-                          setFormData((p) => {
-                            return { ...p, simSerialNumber: e.target.value };
-                          });
-                        }}
-                        type="text"
-                        className=" w-10 bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className=" flex items-center justify-center space-x-[15%] pt-[40px]">
-                  <button
-                    onClick={closeAddDevicePopup}
-                    className=" w-[225px] h-[69px] text-center styled text-[24px]"
-                  >
-                    CANCEL
-                  </button>
-                  <button
-                    onClick={handleSubmitForm}
-                    className=" w-[225px] h-[69px] text-center styled text-[24px]"
-                  >
-                    ADD
-                  </button>
+                <div className=" flex">
+                  <h2>Phone Number</h2>
+                  <input
+                    type="text"
+                    value={formData?.locationPhoneNumber}
+                    onChange={(e) => {
+                      setFormData((p) => {
+                        return {
+                          ...p,
+                          locationPhoneNumber: e.target.value,
+                        };
+                      });
+                    }}
+                    className=" w-[213px]  bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
+                  />
                 </div>
               </div>
-            </>
-          )}
+            </div>
+            <div className=" space-y-[25px]">
+              <h1 className="text-[22px]  ">Device Serial Number </h1>
+              <div className=" text-[#656565] flex text-[20px] space-x-10">
+                <div className=" flex items-start ">
+                  <h2 className="whitespace-nowrap">Serial Number</h2>
+                  <input
+                    type="text"
+                    value={selectedSerial}
+                    className=" w-[385px] bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
+                  />
+                </div>
+                <div className=" w-[714px] h-[164px] flex flex-col custom-scrollbar overflow-scroll  p-[12px]">
+                  <div className=" bg-[#EFEFEF] active-card p-[12px] h-fit ">
+                    <div className=" bg-[#EFEFEF] flex flex-col px-[23px]">
+                      {allSerial &&
+                        allSerial.map((e) => {
+                          return (
+                            <p
+                              onClick={() => {
+                                setSelectedSerial(e);
+                                setFormData((p) => {
+                                  return { ...p, serialNumber: e };
+                                });
+                              }}
+                              className={`${
+                                e === selectedSerial
+                                  ? "bg-[#656565] text-white"
+                                  : "hover:bg-[#656565]/20"
+                              } cursor-pointer  w-full text-center text-[20px] font-semibold border-b-[2px] border-[#707070]/36`}
+                            >
+                              {e}
+                            </p>
+                          );
+                        })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className=" space-y-[25px] ">
+              <h1 className="text-[22px] ">SIM Card Information</h1>
+              <div className=" text-[#656565] flex text-[20px] space-x-10">
+                <div className=" flex">
+                  <h2>Phone Number</h2>
+                  <input
+                    type="text"
+                    value={formData?.simcardPhoneNumber}
+                    onChange={(e) => {
+                      setFormData((p) => {
+                        return { ...p, simcardPhoneNumber: e.target.value };
+                      });
+                    }}
+                    className=" bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
+                  />
+                </div>
+                <div className=" flex">
+                  <h2>IMEI</h2>
+                  <input
+                    type="text"
+                    value={formData?.imei}
+                    onChange={(e) => {
+                      setFormData((p) => {
+                        return { ...p, imei: e.target.value };
+                      });
+                    }}
+                    className=" bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
+                  />
+                </div>
+                <div className=" flex">
+                  <h2>SIM Serial Number</h2>
+                  <input
+                    value={formData?.simSerialNumber}
+                    onChange={(e) => {
+                      setFormData((p) => {
+                        return { ...p, simSerialNumber: e.target.value };
+                      });
+                    }}
+                    type="text"
+                    className=" w-10 bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className=" flex items-center justify-center space-x-[15%] pt-[40px]">
+              <button
+                onClick={closeAddDevicePopup}
+                className=" w-[225px] h-[69px] text-center styled text-[24px]"
+              >
+                CANCEL
+              </button>
+              <button
+                onClick={handleSubmitForm}
+                className=" w-[225px] h-[69px] text-center styled text-[24px]"
+              >
+                ADD
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

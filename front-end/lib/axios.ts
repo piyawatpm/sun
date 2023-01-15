@@ -22,6 +22,9 @@ const onRejected = async (error: any) => {
     deleteAllCookies();
     window.location.href = `/`;
   }
+  else {
+    throw error
+  }
   const errorConfig = error.config;
 };
 
