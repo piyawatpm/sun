@@ -9,7 +9,7 @@ export default function MyCombobox({
 }) {
   const [selected, setSelected] = useState(isFilter ? "All" : "");
   const [query, setQuery] = useState("");
-  const [temp, setTemp] = useState("");
+
   const filteredPeople =
     query === ""
       ? clients

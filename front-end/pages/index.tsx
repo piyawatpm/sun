@@ -381,7 +381,7 @@ export default function Home({ isLoggedin }: HomeProps) {
   const [isLogin, setIsLogin] = useState(isLoggedin);
   const [isAddDevice, setIsAddDevice] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState("test");
+  const [selectedGroup, setSelectedGroup] = useState("");
 
   const containerStyle = {
     width: "100vw",
@@ -402,7 +402,7 @@ export default function Home({ isLoggedin }: HomeProps) {
   const closeDeviceManage = () => {
     setIsDashboardOpen(false);
   };
- 
+  console.log(selectedGroup)
   return (
     <>
       <groupContext.Provider value={[setSelectedGroup, setIsDashboardOpen]}>

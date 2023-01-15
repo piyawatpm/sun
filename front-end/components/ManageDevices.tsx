@@ -25,10 +25,13 @@ const ManageDevices = ({ closeDeviceManage, selectedGroup }) => {
 
   const addressDevice = `http://103.170.142.47:8000/api/v1/device/${currentDevice}`;
   const fetcherDevice = async (url) =>
-    await axios.get(url).then((res) => {
-      return res.data;
-    });
+    await axios.get(url).then((res) => res.data);
   const { data: deviceData } = useSWR(addressDevice, fetcherDevice);
+
+  const addressClient = `http://103.170.142.47:8000/api/v1/client`;
+  const fetcherClient = async (url) =>
+    await axios.get(url).then((res) => res.data);
+  const { data: clients } = useSWR(addressClient, fetcherClient);
 
   const handleOpen = () => {
     setOpen((e) => !e);
@@ -62,6 +65,8 @@ const ManageDevices = ({ closeDeviceManage, selectedGroup }) => {
       </svg>
     );
   }
+  
+
   return (
     <Accordion
       open={open}
@@ -77,7 +82,7 @@ const ManageDevices = ({ closeDeviceManage, selectedGroup }) => {
         <img onClick={closeDeviceManage} src="/images/left.png" alt="" />
 
         <p className=" text-[24px]  font-semibold   text-white">
-          {selectedGroup.name}
+          {selectedGroup.address}
         </p>
       </AccordionHeader>
 
@@ -86,7 +91,9 @@ const ManageDevices = ({ closeDeviceManage, selectedGroup }) => {
           <div className=" flex flex-col py-3 w-full pl-3 text-[16px] font-bold bg-[#F5F5F5] rounded-[6px] shadow-md border-t-[3px] border-l-[3px]  border-white shadow-gray-300">
             <div className=" flex space-x-2">
               <p>CLIENT NAME:</p>
-              <p className="text-[#636363]"> {selectedGroup.client}</p>
+              <p className="text-[#636363]">
+                {clients.find((e) => e.id == selectedGroup.client).name}
+              </p>
             </div>
             <div className=" flex space-x-2">
               <p>DIVICE NAME:</p>

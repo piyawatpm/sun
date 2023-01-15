@@ -40,19 +40,16 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
     if (filteredByClient === "All") return deviceGroup;
     let output;
     if (deviceGroup) {
-      console.log(deviceGroup);
       output = deviceGroup.filter((e) => {
-        return (
-          e.client === clients.filter((r) => r.name === filteredByClient)[0]?.id
+        return e.client.includes(
+          clients?.filter((r) => r.name === filteredByClient)[0]?.id
         );
       });
-      console.log(output);
     }
     return output;
   }, [deviceGroup, filteredByClient]);
   const devicesByDistrict = useMemo(() => {
     if (!modifiedData) return [];
-
     const grouped = modifiedData.reduce((prev, cur) => {
       return prev[cur.location]
         ? { ...prev, [cur.location]: [...prev[cur.location], cur] }
@@ -114,36 +111,6 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
     }
   }, [viewState]);
 
-  // };
-  // const changeToDistrictList = () => {
-  //   setViewState("overall");
-  // };
-  // type DistrictStatus = {
-  //   district: string;
-  //   ozoneMate: number;
-  //   online: number;
-  //   offline: number;
-  //   alert: number;
-  //   id: string;
-  //   user: string;
-  // };
-
-  // useEffect(() => {
-  //   if (map) {
-  // mockArea.forEach((e) => {
-  //   map?.data.addGeoJson(e);
-  // });
-
-  //     var marker = new google.maps.Marker({
-  //       position: {
-  //         lng: 2.40033936500561,
-  //         lat: 48.8777471008302,
-  //       },
-  //       map: map,
-  //       // icon: './alert.png',
-  //     });
-  //   }
-  // }, []);
   const filteredByClients = (targetClient) => {
     setFilteredByClient(targetClient);
   };
@@ -153,6 +120,7 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
 
   useEffect(() => {
     resetMap();
+
     const arr = Object.keys(devicesByDistrict);
     const filteredLocation = location?.filter((e) => arr.includes(`${e.id}`));
     filteredLocation?.map((e) => {
@@ -175,14 +143,20 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
       };
     });
     map.data.forEach((e) => {
-      console.log(selectDistrict);
-      if (selectDistrict == e.j.id) {
+      if (
+        location.find((e) => e.id == selectDistrict)?.geoJson.features[0]
+          .properties.name_3 == e.j.name_3
+      ) {
         e.setProperty("isSelected", true);
       } else e.setProperty("isSelected", false);
     });
   }, [selectDistrict]);
   const openDeviceManager = (i) => {
-    setSelectedGroup(filteredByDistrict.filter((group) => group.name === i)[0]);
+    setSelectedGroup(
+      filteredByDistrict.filter((group) => {
+        return group.id === i;
+      })[0]
+    );
     setIsDashboardOpen((p) => !p);
   };
   const clientList = clients?.map((e) => e.name);
@@ -215,7 +189,7 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
             </button>
           </>
         ) : (
-          <>
+          <div className=" flex items-center w-full">
             <button
               onClick={() => {
                 setViewState("overall");
@@ -228,13 +202,21 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
                 alt=""
               />
             </button>
-          </>
+            <p className="  mx-auto text-black font-bold text-[20px]">
+              {
+                location.find((e) => e.id == selectDistrict)?.geoJson
+                  .features[0].properties.name_3
+              }
+            </p>
+          </div>
         )}
       </div>
       <div className="overflow-scroll h-full space-y-11 flex flex-col items-center rounded-[6px]  pl-[30px] pr-[20px]  custom-scrollbar">
         {viewState === "overall" && devicesByDistrict ? (
           <>
             {Object.entries(devicesByDistrict).map(([key, value]) => {
+              const districtName = location.find((e) => e.id == key)?.geoJson
+                .features[0].properties.name_3;
               return (
                 <District
                   doubleClick={selectedDistrict}
@@ -250,12 +232,9 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
                     offline: value.sumData.offline_devices,
                     // @ts-ignore
                     warning: value.sumData.warning_devices,
-                    district: key,
+                    district: districtName,
                     id: key,
                   }}
-                  // isSelected={isSelectDistrict}
-                  // setSelected={setIsSelectDistrict}
-                  // changeView={changeToDevicesList}
                 />
               );
             })}
@@ -280,12 +259,9 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
                         offline: e.offline_devices,
                         // @ts-ignore
                         warning: e.warning_devices,
-                        district: e.name,
+                        district: e.address,
                         id: e.id,
                       }}
-                      // isSelected={isSelectDistrict}
-                      // setSelected={setIsSelectDistrict}
-                      // changeView={changeToDevicesList}
                     />
                   </>
                 );
