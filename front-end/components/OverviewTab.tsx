@@ -6,37 +6,7 @@ const overviewTab = () => {
   const address = `/api/v1/overview`;
   const fetcher = async (url) => await api.get(url).then((res) => res.data);
   const { data, error } = useSWR(address, fetcher);
-  // const {
-  //   total_devices,
-  //   online_devices,
-  //   offline_devices,
-  //   warning_devices,
-  //   maintainence_devices,
-  //   cellTotalHours,
-  //   oxyTotalHours,
-  //   locations,
-  // } = data ? data : undefined;
 
-  // const totalDevice = mockDevices.length;
-  // const totalOnline = mockDevices.filter((e) => {
-  //   return e.status === "online";
-  // }).length;
-  // const totalOffline = mockDevices.filter((e) => {
-  //   return e.status === "offline";
-  // }).length;
-  // const totalWarning = mockDevices.filter((e) => {
-  //   return e.isWarning === true;
-  // }).length;
-  // const totalMaintencence = mockDevices.filter((e) => {
-  //   return e.isMaintencence === true;
-  // }).length;
-  // const totalCellHours = mockDevices.reduce((accumulator, object) => {
-  //   return accumulator + object.cellHours;
-  // }, 0);
-  // const totalOxyHours = mockDevices.reduce((accumulator, object) => {
-  //   return accumulator + object.oxyHours;
-  // }, 0);
-  const totalLocations = mockDistrict.length;
   return (
     <div className=" flex  justify-around  space-y-1 flex-col pt-[52px] pb-[33px] px-[28px] h-full bg-gray-100 rounded-b-md ">
       {data ? (

@@ -14,7 +14,57 @@ const Gauge = ({ percentage }) => {
   };
   return (
     <>
-      <div className=" w-fit h-fit relative ">
+      <div className=" w-fit h-fit relative  hello bg-gray-600">
+        <div className=" h-[200px] w-[500px]  p-2 overflow-scroll hello">
+          <p>hellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohello</p>
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+
+          <p>hello</p>
+          <p>hello</p>
+          <p>hello</p>
+
+          <p>hello</p>
+        </div>
         <div
           className={` w-[3.52px] h-[10.56px] rounded-[6px] bg-black absolute bottom-[${calculateBottom(
             percentage

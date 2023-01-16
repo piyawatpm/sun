@@ -340,7 +340,7 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
             </button>
             <p className="  mx-auto text-black font-bold text-[20px]">
               {
-                location.find((e) => e.id == selectDistrict)?.geoJson
+                location?.find((e) => e.id == selectDistrict)?.geoJson
                   .features[0].properties.name_3
               }
             </p>
@@ -351,7 +351,7 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
         {viewState === "overall" && devicesByDistrict ? (
           <>
             {Object.entries(devicesByDistrict).map(([key, value]) => {
-              const districtName = location.find((e) => e.id == key)?.geoJson
+              const districtName = location?.find((e) => e.id == key)?.geoJson
                 .features[0].properties.name_3;
               return (
                 <District

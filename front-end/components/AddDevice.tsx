@@ -247,7 +247,7 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                     className=" w-[385px] bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
                   />
                 </div>
-                <div className=" w-[714px] h-[164px] flex flex-col custom-scrollbar overflow-scroll  p-[12px]">
+                <div className=" w-[714px] h-[164px] flex flex-col custom-scrollbar small overflow-scroll  p-[12px]">
                   <div className=" bg-[#EFEFEF] active-card p-[12px] h-fit ">
                     <div className=" bg-[#EFEFEF] flex flex-col px-[23px]">
                       {allSerial &&
