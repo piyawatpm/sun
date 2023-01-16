@@ -1,11 +1,10 @@
-import Image from "next/image";
-import { useState } from "react";
-import OverviewTab from "./OverviewTab";
-import DistrictTab from "./DistrictTab";
-import { mockArea } from "../pages";
+import Image from 'next/image';
+import { useState } from 'react';
+import OverviewTab from './OverviewTab';
+import DistrictTab from './DistrictTab';
 enum Tab {
-  overview = "OVERVIEW",
-  districtList = "districtList",
+  overview = 'OVERVIEW',
+  districtList = 'districtList',
 }
 type InterfaceProps = {
   openAddDevicePopup: () => void;
@@ -24,7 +23,7 @@ const Interface = ({ openAddDevicePopup, map, isVisible }: InterfaceProps) => {
   return (
     <div
       className={` ${
-        !isVisible && "invisible"
+        !isVisible && 'invisible'
       } w-[586px] h-[888px] absolute z-10 my-auto  translate-y-[-53%] 3xl:translate-y-[-53%] top-1/2  left-[5%]  scale-[61%] 3xl:scale-100  `}
     >
       <div className=" flex text-center  text-white h-[64px]  text-[24px] font-semibold ">
@@ -48,7 +47,7 @@ const Interface = ({ openAddDevicePopup, map, isVisible }: InterfaceProps) => {
       <div className=" w-full h-2 bg-gray-400">
         <div
           className={` ${
-            tab === Tab.districtList && " translate-x-[100%]"
+            tab === Tab.districtList && ' translate-x-[100%]'
           } transition relative  duration-500  w-1/2 h-full bg-[#00D3FF] shine `}
         ></div>
       </div>

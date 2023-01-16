@@ -1,8 +1,7 @@
-import { mockDevices, mockDistrict } from "../pages";
-import { api } from "../lib/axios";
-import useSWR from "swr";
+import { api } from '../lib/axios';
+import useSWR from 'swr';
 const overviewTab = () => {
-  console.log("env = ", process.env.NEXT_PUBLIC_API_URL);
+  console.log('env = ', process.env.NEXT_PUBLIC_API_URL);
   const address = `/api/v1/overview`;
   const fetcher = async (url) => await api.get(url).then((res) => res.data);
   const { data, error } = useSWR(address, fetcher);
@@ -11,7 +10,7 @@ const overviewTab = () => {
     <div className=" flex  justify-around  space-y-1 flex-col pt-[52px] pb-[33px] px-[28px] h-full bg-gray-100 rounded-b-md ">
       {data ? (
         <>
-          {" "}
+          {' '}
           <div className=" flex items-center rounded-[6px] min-h-[16%] shadow-md border-t-[3px] border-l-[3px] bg-gray-100 border-white shadow-gray-300  px-2 py-1 text-[20px] font-bold">
             <div className="flex flex-col items-center  translate-x-[-50%] ml-[15%] ">
               <img src="/images/machine.png" className=" " alt="" />
