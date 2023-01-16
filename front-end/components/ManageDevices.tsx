@@ -92,7 +92,7 @@ const ManageDevices = ({ closeDeviceManage, selectedGroup }) => {
             <div className=" flex space-x-2">
               <p>CLIENT NAME:</p>
               <p className="text-[#636363]">
-                {clients.find((e) => e.id == selectedGroup.client).name}
+                {clients?.find((e) => e.id == selectedGroup.client).name}
               </p>
             </div>
             <div className=" flex space-x-2">
