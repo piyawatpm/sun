@@ -1,10 +1,9 @@
-import { Autocomplete } from '@react-google-maps/api';
+import { Autocomplete } from "@react-google-maps/api";
 
-import { api } from '../lib/axios';
-import { useEffect, useState } from 'react';
-import Minimap from './Minimap';
-import useSWR from 'swr';
-import MyCombobox from './MyCombobox';
+import { api } from "../lib/axios";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
+import MyCombobox from "./MyCombobox";
 type AddDeviceProps = {
   closeAddDevicePopup: () => void;
 };
@@ -48,7 +47,7 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
     if (serialFromApi) setAllSerial(serialFromApi.map((e) => e.serial).sort());
   }, [serialFromApi]);
   const onLoad = (autocomplete) => {
-    console.log('autocomplete: ', autocomplete);
+    console.log("autocomplete: ", autocomplete);
 
     setAutocomplete(autocomplete);
   };
@@ -72,7 +71,7 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
 
   const handleSubmitForm = () => {
     axios
-      .post('/api/v1/addDevice', {
+      .post("/api/v1/addDevice", {
         ...formData,
       })
       .then(function (response) {
@@ -109,10 +108,10 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
             <div className=" z-10 absolute bg-black/[45%] inset-0">
               <div className=" bg-white w-[585px] h-[260px] rounded-[5px] top-1/2 left-1/2 absolute translate-x-[-50%]  translate-y-[-50%] flex flex-col items-center justify-center space-y-10">
                 <h1 className=" text-[28px] font-bold">
-                  {isComplete ? 'DEVICE ADDED' : 'FAIL TO ADD DEVICE'}
+                  {isComplete ? "DEVICE ADDED" : "FAIL TO ADD DEVICE"}
                 </h1>
                 <img
-                  src={`images/${isComplete ? 'success' : 'fail'}.png`}
+                  src={`images/${isComplete ? "success" : "fail"}.png`}
                   onClick={() => {
                     setIsPopupOpen(false);
                   }}
@@ -263,8 +262,8 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                               }}
                               className={`${
                                 e === selectedSerial
-                                  ? 'bg-[#656565] text-white'
-                                  : 'hover:bg-[#656565]/20'
+                                  ? "bg-[#656565] text-white"
+                                  : "hover:bg-[#656565]/20"
                               } cursor-pointer  w-full text-center text-[20px] font-semibold border-b-[2px] border-[#707070]/36`}
                             >
                               {e}
