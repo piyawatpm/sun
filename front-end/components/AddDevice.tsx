@@ -1,9 +1,10 @@
-import { Autocomplete } from "@react-google-maps/api";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import Minimap from "./Minimap";
-import useSWR from "swr";
-import MyCombobox from "./MyCombobox";
+import { Autocomplete } from '@react-google-maps/api';
+
+import { api } from '../lib/axios';
+import { useEffect, useState } from 'react';
+import Minimap from './Minimap';
+import useSWR from 'swr';
+import MyCombobox from './MyCombobox';
 type AddDeviceProps = {
   closeAddDevicePopup: () => void;
 };
@@ -31,23 +32,23 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
   const [selectedSerial, setSelectedSerial] = useState<string>();
   const [allSerial, setAllSerial] = useState<string[]>();
 
-  const addressSerial = `http://103.170.142.47:8000/api/v1/avaliableDevice`;
+  const addressSerial = `/api/v1/avaliableDevice`;
   const fetcherSerial = async (url) =>
-    await axios.get(url).then((res) => {
+    await api.get(url).then((res) => {
       return res.data;
     });
   const { data: serialFromApi } = useSWR(addressSerial, fetcherSerial);
 
-  const addressClient = `http://103.170.142.47:8000/api/v1/client`;
+  const addressClient = `/api/v1/client`;
   const fetcherClient = async (url) =>
-    await axios.get(url).then((res) => res.data);
+    await api.get(url).then((res) => res.data);
   const { data: clients } = useSWR(addressClient, fetcherClient);
 
   useEffect(() => {
     if (serialFromApi) setAllSerial(serialFromApi.map((e) => e.serial).sort());
   }, [serialFromApi]);
   const onLoad = (autocomplete) => {
-    console.log("autocomplete: ", autocomplete);
+    console.log('autocomplete: ', autocomplete);
 
     setAutocomplete(autocomplete);
   };
@@ -71,7 +72,7 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
 
   const handleSubmitForm = () => {
     axios
-      .post("http://103.170.142.47:8000/api/v1/addDevice", {
+      .post('/api/v1/addDevice', {
         ...formData,
       })
       .then(function (response) {
@@ -108,10 +109,10 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
             <div className=" z-10 absolute bg-black/[45%] inset-0">
               <div className=" bg-white w-[585px] h-[260px] rounded-[5px] top-1/2 left-1/2 absolute translate-x-[-50%]  translate-y-[-50%] flex flex-col items-center justify-center space-y-10">
                 <h1 className=" text-[28px] font-bold">
-                  {isComplete ? "DEVICE ADDED" : "FAIL TO ADD DEVICE"}
+                  {isComplete ? 'DEVICE ADDED' : 'FAIL TO ADD DEVICE'}
                 </h1>
                 <img
-                  src={`images/${isComplete ? "success" : "fail"}.png`}
+                  src={`images/${isComplete ? 'success' : 'fail'}.png`}
                   onClick={() => {
                     setIsPopupOpen(false);
                   }}
@@ -262,8 +263,8 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                               }}
                               className={`${
                                 e === selectedSerial
-                                  ? "bg-[#656565] text-white"
-                                  : "hover:bg-[#656565]/20"
+                                  ? 'bg-[#656565] text-white'
+                                  : 'hover:bg-[#656565]/20'
                               } cursor-pointer  w-full text-center text-[20px] font-semibold border-b-[2px] border-[#707070]/36`}
                             >
                               {e}

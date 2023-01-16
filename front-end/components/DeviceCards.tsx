@@ -7,10 +7,13 @@ const DeviceCards = ({
   return (
     <div
       onClick={() => {
+        console.log('click card : ', deviceSerial);
         setCurrentDevice(deviceSerial);
       }}
       className={`rounded-[6px] cursor-pointer w-[265px] h-[115px] ${
-        currentDevice == deviceSerial ? "bg-[#B7B7B7]" : "bg-[#F9F9F9] border-white  border-t-[3px] border-l-[3px]"
+        currentDevice == deviceSerial
+          ? 'bg-[#B7B7B7]'
+          : 'bg-[#F9F9F9] border-white  border-t-[3px] border-l-[3px]'
       }  shadow-lg shadow-gray-300   px-[22px]  pt-[8px] pb-[10px] flex`}
     >
       <div className="w-[133px] h-[94px] bg-[#F5F5F5] shadow-lg rounded-[10px]   border-white shadow-gray-30 border-t-[3px] border-l-[3px] flex items-center justify-center space-x-2">

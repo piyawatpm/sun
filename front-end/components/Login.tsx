@@ -1,9 +1,9 @@
-import { ChangeEvent, FormEvent, useState } from "react";
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { api } from "../lib/axios";
-import { getCookieFromServer, setCookie } from "../utils/cookie";
-import { GetServerSidePropsContext } from "next";
-import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
+import { ChangeEvent, FormEvent, useState } from 'react';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { api } from '../lib/axios';
+import { getCookieFromServer, setCookie } from '../utils/cookie';
+import { GetServerSidePropsContext } from 'next';
+import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 type LoginDetails = {
   username: string;
   password: string;
@@ -23,21 +23,18 @@ const Login = ({ login }: { login: any }) => {
     e.preventDefault();
     try {
       const { username, password } = loginDetails;
-      const res = await api.post(
-        `http://103.170.142.47:8000/auth/token/login/`,
-        {
-          username,
-          password,
-        }
-      );
+      const res = await api.post(`/auth/token/login/`, {
+        username,
+        password,
+      });
       login(true);
 
-      console.log("res = ", res.data);
+      console.log('res = ', res.data);
       const { auth_token } = res.data;
-      axios.defaults.headers.common["Authorization"] = `Token ${auth_token}`;
-      setCookie("userToken", auth_token);
+      axios.defaults.headers.common['Authorization'] = `Token ${auth_token}`;
+      setCookie('userToken', auth_token);
     } catch (error) {
-      console.log("error : ", error);
+      console.log('error : ', error);
       login(false);
       const errors = error as Error | AxiosError;
       setIsLoginError(true);
@@ -53,7 +50,7 @@ const Login = ({ login }: { login: any }) => {
             <h2>Account Name:</h2>
             <input
               onChange={handleChangeForm}
-              name={"username"}
+              name={'username'}
               type="text"
               className="h-11 px-[10px] rounded-md inner-shadow2  border-b-2 border-r-2 border-white shadow-black"
             />
@@ -63,8 +60,8 @@ const Login = ({ login }: { login: any }) => {
             <div className=" w-full relative">
               <input
                 onChange={handleChangeForm}
-                name={"password"}
-                type={passwordShown ? "text" : "password"}
+                name={'password'}
+                type={passwordShown ? 'text' : 'password'}
                 className="h-11 px-[10px] w-full rounded-md inner-shadow2  border-b-2 border-r-2 border-white shadow-black relative"
               />
               <div

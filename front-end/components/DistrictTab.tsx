@@ -1,35 +1,35 @@
-import { Fragment, ReactElement, useContext, useEffect, useState } from "react";
+import { Fragment, ReactElement, useContext, useEffect, useState } from 'react';
 
-import { v4 as uuidv4 } from "uuid";
-import { groupContext, mockArea } from "../pages";
-import District from "./DistrictCard";
-import MyCombobox from "./MyCombobox";
-import axios from "axios";
-import { useMemo } from "react";
-import useSWR from "swr";
-type View = "overall" | string;
+import { v4 as uuidv4 } from 'uuid';
+import { groupContext, mockArea } from '../pages';
+import District from './DistrictCard';
+import MyCombobox from './MyCombobox';
+import { useMemo } from 'react';
+import useSWR from 'swr';
+import { api } from '../lib/axios';
+type View = 'overall' | string;
 
 const districtTab = ({ openAddDevicePopup, map }: any) => {
   const [setSelectedGroup, setIsDashboardOpen] = useContext(groupContext);
 
-  const [viewState, setViewState] = useState<View>("overall");
+  const [viewState, setViewState] = useState<View>('overall');
   const [selectDistrict, setSelectDistrict] = useState<string>();
   const [filteredByClient, setFilteredByClient] = useState();
   const [renderedMarker, setRenderedMarker] = useState([]);
 
-  const addressDeviceGroup = `http://103.170.142.47:8000/api/v1/deviceGroup`;
+  const addressDeviceGroup = `/api/v1/deviceGroup`;
   const fetcherDevice = async (url) =>
-    await axios.get(url).then((res) => res.data);
+    await api.get(url).then((res) => res.data);
   const { data: deviceGroup } = useSWR(addressDeviceGroup, fetcherDevice);
 
-  const addressClient = `http://103.170.142.47:8000/api/v1/client`;
+  const addressClient = `/api/v1/client`;
   const fetcherClient = async (url) =>
-    await axios.get(url).then((res) => res.data);
+    await api.get(url).then((res) => res.data);
   const { data: clients } = useSWR(addressClient, fetcherClient);
 
-  const addressLocations = `http://103.170.142.47:8000/api/v1/location`;
+  const addressLocations = `/api/v1/location`;
   const fetcherLocation = async (url) =>
-    await axios.get(url).then((res) => {
+    await api.get(url).then((res) => {
       console.log(res.data);
 
       return res.data;
@@ -37,7 +37,7 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
   const { data: location } = useSWR(addressLocations, fetcherLocation);
 
   const modifiedData = useMemo(() => {
-    if (filteredByClient === "All") return deviceGroup;
+    if (filteredByClient === 'All') return deviceGroup;
     let output;
     if (deviceGroup) {
       output = deviceGroup.filter((e) => {
@@ -61,17 +61,17 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
         const r = value.reduce((prev, cur, idx) => {
           if (idx === 0) {
             return {
-              offline_devices: cur["offline_devices"],
-              online_devices: cur["online_devices"],
-              total_devices: cur["total_devices"],
-              warning_devices: cur["warning_devices"],
+              offline_devices: cur['offline_devices'],
+              online_devices: cur['online_devices'],
+              total_devices: cur['total_devices'],
+              warning_devices: cur['warning_devices'],
             };
           } else {
             return {
-              offline_devices: prev["offline_devices"] + cur["offline_devices"],
-              online_devices: prev["online_devices"] + cur["online_devices"],
-              total_devices: prev["total_devices"] + cur["total_devices"],
-              warning_devices: prev["warning_devices"] + cur["warning_devices"],
+              offline_devices: prev['offline_devices'] + cur['offline_devices'],
+              online_devices: prev['online_devices'] + cur['online_devices'],
+              total_devices: prev['total_devices'] + cur['total_devices'],
+              warning_devices: prev['warning_devices'] + cur['warning_devices'],
             };
           }
         }, {});
@@ -92,7 +92,7 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
     });
   };
   useEffect(() => {
-    if (viewState !== "overall") {
+    if (viewState !== 'overall') {
       filteredByDistrict.map((item) => {
         var marker = new google.maps.Marker({
           position: {
@@ -115,31 +115,54 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
     setFilteredByClient(targetClient);
   };
   const selectedDistrict = (district) => {
+    console.log('selectedDistrict = ', district);
     setViewState(district);
+  };
+
+  const handleHighlightDistrice = (district) => {
+    console.log('handleHighlightDistrice = ', district);
+    setSelectDistrict(district);
   };
 
   useEffect(() => {
     resetMap();
-
     const arr = Object.keys(devicesByDistrict);
     const filteredLocation = location?.filter((e) => arr.includes(`${e.id}`));
     filteredLocation?.map((e) => {
       map.data.addGeoJson(e.geoJson);
     });
+
+    // for handle click map
+    map.data.addListener('click', (event) => {
+      console.log('click : ', event.feature.getProperty('id'));
+      const getId = event.feature.getProperty('id');
+      if (getId) {
+        handleHighlightDistrice(getId);
+      }
+    });
+
+    // handle double click map
+    map.data.addListener('dblclick', (event) => {
+      console.log('click : ', event.feature.getProperty('id'));
+      const getId = event.feature.getProperty('id');
+      if (getId) {
+        selectedDistrict(getId);
+      }
+    });
   }, [devicesByDistrict]);
 
   useEffect(() => {
     map.data.setStyle((feature) => {
-      let color = "white";
-      if (feature.getProperty("isSelected")) {
-        color = "#8F8F8F";
+      let color = 'white';
+      if (feature.getProperty('isSelected')) {
+        color = '#8F8F8F';
       } else {
-        color = "white";
+        color = 'white';
       }
       return /** @type {!google.maps.Data.StyleOptions} */ {
         fillColor: color,
         strokeWeight: 3,
-        strokeColor: "#707070",
+        strokeColor: '#707070',
       };
     });
     map.data.forEach((e) => {
@@ -147,10 +170,11 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
         location.find((e) => e.id == selectDistrict)?.geoJson.features[0]
           .properties.name_3 == e.j.name_3
       ) {
-        e.setProperty("isSelected", true);
-      } else e.setProperty("isSelected", false);
+        e.setProperty('isSelected', true);
+      } else e.setProperty('isSelected', false);
     });
   }, [selectDistrict]);
+
   const openDeviceManager = (i) => {
     setSelectedGroup(
       filteredByDistrict.filter((group) => {
@@ -163,12 +187,12 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
   return (
     <div className=" flex  flex-col pb-6 px-3 h-full bg-[#F5F5F5] rounded-b-md  ">
       <div className=" w-full flex  min-h-[104px] pt-8 pb-[18px] pl-[30px]  ">
-        {viewState === "overall" ? (
+        {viewState === 'overall' ? (
           <>
             {clients && (
               <MyCombobox
                 filteredByClients={filteredByClients}
-                clients={["All", ...clientList]}
+                clients={['All', ...clientList]}
                 isFilter={true}
                 className="w-full outline-none border-none py-2 pl-3 pr-10 text-[20px] font-bold leading-5 text-gray-900 focus:ring-0 bg-[#F5F5F5]"
               />
@@ -192,7 +216,7 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
           <div className=" flex items-center w-full">
             <button
               onClick={() => {
-                setViewState("overall");
+                setViewState('overall');
               }}
               className=" styled w-11 h-11"
             >
@@ -212,7 +236,7 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
         )}
       </div>
       <div className="overflow-scroll h-full space-y-11 flex flex-col items-center rounded-[6px]  pl-[30px] pr-[20px]  custom-scrollbar">
-        {viewState === "overall" && devicesByDistrict ? (
+        {viewState === 'overall' && devicesByDistrict ? (
           <>
             {Object.entries(devicesByDistrict).map(([key, value]) => {
               const districtName = location.find((e) => e.id == key)?.geoJson
@@ -222,7 +246,7 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
                   doubleClick={selectedDistrict}
                   key={key}
                   selectDistrict={selectDistrict}
-                  setSelectDistrict={setSelectDistrict}
+                  setSelectDistrict={handleHighlightDistrice}
                   data={{
                     // @ts-ignore
                     ozoneMate: value.sumData.total_devices,
@@ -241,6 +265,7 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
           </>
         ) : (
           filteredByDistrict && (
+            // selected district
             <>
               {filteredByDistrict.map((e) => {
                 return (
@@ -249,7 +274,7 @@ const districtTab = ({ openAddDevicePopup, map }: any) => {
                       doubleClick={openDeviceManager}
                       key={e.id}
                       selectDistrict={selectDistrict}
-                      setSelectDistrict={setSelectDistrict}
+                      setSelectDistrict={handleHighlightDistrice}
                       data={{
                         // @ts-ignore
                         ozoneMate: e.total_devices,

@@ -3,7 +3,6 @@ import { deleteAllCookies, getCookie } from '../utils/cookie';
 
 const authRequestInterceptor = (config: AxiosRequestConfig) => {
   const token = getCookie('userToken');
-  console.log('get token ==== : ', document.cookie);
 
   let headers: any = {};
   if (token != null) {
@@ -21,15 +20,18 @@ const onRejected = async (error: any) => {
   if (error?.response?.status === 401) {
     deleteAllCookies();
     window.location.href = `/`;
-  }
-  else {
-    throw error
+  } else {
+    throw error;
   }
   const errorConfig = error.config;
 };
 
-axios.interceptors.request.use(authRequestInterceptor);
+const frontendServiceApi = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+});
 
-axios.interceptors.response.use(onFulfilled, onRejected);
+frontendServiceApi.interceptors.request.use(authRequestInterceptor);
 
-export const api = axios;
+frontendServiceApi.interceptors.response.use(onFulfilled, onRejected);
+
+export const api = frontendServiceApi;

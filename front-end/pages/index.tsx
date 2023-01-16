@@ -1,58 +1,58 @@
-import React, { useState, useCallback, useEffect, createContext } from "react";
+import React, { useState, useCallback, useEffect, createContext } from 'react';
 import {
   GoogleMap,
   useJsApiLoader,
   Autocomplete,
   Polygon,
-} from "@react-google-maps/api";
+} from '@react-google-maps/api';
 
-import Interface from "../components/Interface";
-import Time from "../components/Time";
+import Interface from '../components/Interface';
+import Time from '../components/Time';
 
-import AddDevice from "../components/AddDevice";
-import Login from "../components/Login";
-import { GetServerSidePropsContext } from "next";
-import { getCookieFromServer } from "../utils/cookie";
-import ManageDevices from "../components/ManageDevices";
-import { api } from "../lib/axios";
-import useSWR from "swr";
+import AddDevice from '../components/AddDevice';
+import Login from '../components/Login';
+import { GetServerSidePropsContext } from 'next';
+import { getCookieFromServer } from '../utils/cookie';
+import ManageDevices from '../components/ManageDevices';
+import { api } from '../lib/axios';
+import useSWR from 'swr';
 type HomeProps = {
   isLoggedin: boolean;
 };
 
 export const mockArea = [
   {
-    a: "area1",
-    type: "FeatureCollection",
+    a: 'area1',
+    type: 'FeatureCollection',
     style: {
-      "stroke-width": "3",
-      "fill-opacity": 0.6,
+      'stroke-width': '3',
+      'fill-opacity': 0.6,
     },
-    crs: { type: "name", properties: { name: "EPSG:4326" } },
+    crs: { type: 'name', properties: { name: 'EPSG:4326' } },
     features: [
       {
-        type: "Feature",
+        type: 'Feature',
         properties: {
-          a: "area1",
+          a: 'area1',
           id_0: 79,
-          iso: "FRA",
-          name_0: "France",
+          iso: 'FRA',
+          name_0: 'France',
           id_1: 4,
-          name_1: "Île-de-France",
+          name_1: 'Île-de-France',
           id_2: 14,
-          name_2: "Paris",
+          name_2: 'Paris',
           id_3: 60,
-          name_3: "Paris, 17e arrondissement",
+          name_3: 'Paris, 17e arrondissement',
           id_4: 534,
-          name_4: "Paris, 17e arrondissement",
+          name_4: 'Paris, 17e arrondissement',
           id_5: 4750,
-          name_5: "Paris, 17e arrondissement",
-          type_5: "Chef-lieu canton",
-          engtype_5: "Commune",
-          pk: "4750",
+          name_5: 'Paris, 17e arrondissement',
+          type_5: 'Chef-lieu canton',
+          engtype_5: 'Commune',
+          pk: '4750',
         },
         geometry: {
-          type: "MultiPolygon",
+          type: 'MultiPolygon',
           coordinates: [
             [
               [
@@ -73,37 +73,37 @@ export const mockArea = [
     ],
   },
   {
-    a: "area2",
-    type: "FeatureCollection",
+    a: 'area2',
+    type: 'FeatureCollection',
     style: {
-      "stroke-width": "3",
-      "fill-opacity": 0.6,
+      'stroke-width': '3',
+      'fill-opacity': 0.6,
     },
-    crs: { type: "name", properties: { name: "EPSG:4326" } },
+    crs: { type: 'name', properties: { name: 'EPSG:4326' } },
     features: [
       {
-        type: "Feature",
+        type: 'Feature',
         properties: {
-          a: "area2",
+          a: 'area2',
           id_0: 79,
-          iso: "FRA",
-          name_0: "France",
+          iso: 'FRA',
+          name_0: 'France',
           id_1: 4,
-          name_1: "Île-de-France",
+          name_1: 'Île-de-France',
           id_2: 14,
-          name_2: "Paris",
+          name_2: 'Paris',
           id_3: 61,
-          name_3: "Paris, 18e arrondissement",
+          name_3: 'Paris, 18e arrondissement',
           id_4: 535,
-          name_4: "Paris, 18e arrondissement",
+          name_4: 'Paris, 18e arrondissement',
           id_5: 4751,
-          name_5: "Paris, 18e arrondissement",
-          type_5: "Chef-lieu canton",
-          engtype_5: "Commune",
-          pk: "4751",
+          name_5: 'Paris, 18e arrondissement',
+          type_5: 'Chef-lieu canton',
+          engtype_5: 'Commune',
+          pk: '4751',
         },
         geometry: {
-          type: "MultiPolygon",
+          type: 'MultiPolygon',
           coordinates: [
             [
               [
@@ -124,37 +124,37 @@ export const mockArea = [
     ],
   },
   {
-    a: "area3",
-    type: "FeatureCollection",
+    a: 'area3',
+    type: 'FeatureCollection',
     style: {
-      "stroke-width": "3",
-      "fill-opacity": 0.6,
+      'stroke-width': '3',
+      'fill-opacity': 0.6,
     },
-    crs: { type: "name", properties: { name: "EPSG:4326" } },
+    crs: { type: 'name', properties: { name: 'EPSG:4326' } },
     features: [
       {
-        type: "Feature",
+        type: 'Feature',
         properties: {
-          a: "area3",
+          a: 'area3',
           id_0: 79,
-          iso: "FRA",
-          name_0: "France",
+          iso: 'FRA',
+          name_0: 'France',
           id_1: 4,
-          name_1: "Île-de-France",
+          name_1: 'Île-de-France',
           id_2: 14,
-          name_2: "Paris",
+          name_2: 'Paris',
           id_3: 62,
-          name_3: "Paris, 19e arrondissement",
+          name_3: 'Paris, 19e arrondissement',
           id_4: 536,
-          name_4: "Paris, 19e arrondissement",
+          name_4: 'Paris, 19e arrondissement',
           id_5: 4752,
-          name_5: "Paris, 19e arrondissement",
-          type_5: "Chef-lieu canton",
-          engtype_5: "Commune",
-          pk: "4752",
+          name_5: 'Paris, 19e arrondissement',
+          type_5: 'Chef-lieu canton',
+          engtype_5: 'Commune',
+          pk: '4752',
         },
         geometry: {
-          type: "MultiPolygon",
+          type: 'MultiPolygon',
           coordinates: [
             [
               [
@@ -179,75 +179,75 @@ export const mockArea = [
 ];
 export const mockDevices = [
   {
-    group: "g1",
+    group: 'g1',
     deviceId: 1,
-    status: "online",
+    status: 'online',
     cellHours: 1075,
     oxyHours: 2012,
-    district: "area1",
-    client: "client1",
+    district: 'area1',
+    client: 'client1',
     isWarning: true,
     isMaintencence: false,
   },
   {
-    group: "g1",
+    group: 'g1',
     deviceId: 2,
-    status: "offline",
+    status: 'offline',
     cellHours: 1453,
     oxyHours: 3042,
-    district: "area1",
-    client: "client1",
+    district: 'area1',
+    client: 'client1',
     isWarning: false,
     isMaintencence: false,
   },
   {
-    group: "g2",
+    group: 'g2',
     deviceId: 3,
-    status: "online",
+    status: 'online',
     cellHours: 5012,
     oxyHours: 1053,
-    district: "area2",
-    client: "client2",
+    district: 'area2',
+    client: 'client2',
     isWarning: false,
     isMaintencence: false,
   },
   {
-    group: "g3",
+    group: 'g3',
     deviceId: 4,
-    status: "offline",
+    status: 'offline',
     cellHours: 1661,
     oxyHours: 3212,
-    district: "area3",
-    client: "client3",
+    district: 'area3',
+    client: 'client3',
     isWarning: false,
     isMaintencence: true,
   },
   {
-    group: "g4",
+    group: 'g4',
     deviceId: 5,
-    status: "offline",
+    status: 'offline',
     cellHours: 60220,
     oxyHours: 2240,
-    district: "area3",
-    client: "client4",
+    district: 'area3',
+    client: 'client4',
     isWarning: true,
   },
 ];
 
-export const mockDistrict = ["area1", "area2", "area3"];
+export const mockDistrict = ['area1', 'area2', 'area3'];
 export const groupContext = createContext(null);
 
 export default function Home({ isLoggedin }: HomeProps) {
   const libraries: (
-    | "drawing"
-    | "geometry"
-    | "localContext"
-    | "places"
-    | "visualization"
-  )[] = ["places"];
+    | 'drawing'
+    | 'geometry'
+    | 'localContext'
+    | 'places'
+    | 'visualization'
+  )[] = ['places'];
   const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: "AIzaSyCTd-4w5z5_-dQtt6U1_dK-lWXRQVSjgGU",
+    id: 'google-map-script',
+    googleMapsApiKey: 'AIzaSyCTd-4w5z5_-dQtt6U1_dK-lWXRQVSjgGU',
     libraries: libraries,
   });
   const [map, setMap] = useState(null);
@@ -265,11 +265,11 @@ export default function Home({ isLoggedin }: HomeProps) {
   const [isLogin, setIsLogin] = useState(isLoggedin);
   const [isAddDevice, setIsAddDevice] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState('');
 
   const containerStyle = {
-    width: "100vw",
-    height: "100vh",
+    width: '100vw',
+    height: '100vh',
   };
 
   const center = {
@@ -297,7 +297,7 @@ export default function Home({ isLoggedin }: HomeProps) {
   return (
     <>
       <groupContext.Provider value={[setSelectedGroup, setIsDashboardOpen]}>
-        <div style={{ height: "100vh", width: "100%", position: "relative" }}>
+        <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
           {isAddDevice && (
             <AddDevice closeAddDevicePopup={closeAddDevicePopup} />
           )}
@@ -362,7 +362,7 @@ export default function Home({ isLoggedin }: HomeProps) {
 }
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   try {
-    const token = getCookieFromServer("userToken", ctx);
+    const token = getCookieFromServer('userToken', ctx);
     if (token) {
       return {
         props: {
