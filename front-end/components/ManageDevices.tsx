@@ -65,7 +65,6 @@ const ManageDevices = ({ closeDeviceManage, selectedGroup }) => {
       </svg>
     );
   }
-  
 
   return (
     <Accordion
@@ -73,7 +72,7 @@ const ManageDevices = ({ closeDeviceManage, selectedGroup }) => {
       icon={<Icon2 id={1} open={open} />}
       className={`  absolute w-[1574px] top-0 ${
         open && "mt-[-8%]"
-      }  3xl:mt-[2%]  left-1/2 z-10 translate-x-[-50%]  scale-75 3xl:scale-100  flex flex-col`}
+      }  3xl:mt-[2%] translate-x-[-50%]   left-1/2 z-10  scale-[61%] 3xl:scale-100  flex flex-col`}
     >
       <AccordionHeader
         onClick={handleOpen}

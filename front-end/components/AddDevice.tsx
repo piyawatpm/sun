@@ -44,7 +44,7 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
   const { data: clients } = useSWR(addressClient, fetcherClient);
 
   useEffect(() => {
-    if (serialFromApi) setAllSerial(serialFromApi.map((e) => e.serial));
+    if (serialFromApi) setAllSerial(serialFromApi.map((e) => e.serial).sort());
   }, [serialFromApi]);
   const onLoad = (autocomplete) => {
     console.log("autocomplete: ", autocomplete);
@@ -76,6 +76,17 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
       })
       .then(function (response) {
         setIsPopupOpen(true);
+        setSelectedSerial("");
+        setFormData((p) => {
+          return {
+            ...p,
+            deviceName: "",
+            serialNumber: "",
+            simcardPhoneNumber: "",
+            imei: "",
+            simSerialNumber: "",
+          };
+        });
         setIsComplete(true);
       })
       .catch(function (error) {
@@ -91,7 +102,7 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
   const clientList = clients?.map((e) => e.name);
   return (
     <div className=" z-20    bg-black/[45%] fixed inset-0  items-center justify-center font-bold">
-      <div className=" flex items-center justify-center h-full  scale-75 3xl:scale-100">
+      <div className=" flex items-center justify-center h-full  scale-[61%] 3xl:scale-100">
         <div className=" w-[1548px] h-[990px] bg-[#F5F5F5] px-[125px] py-[55px]  relative rounded-[10px]">
           {isPopupOpen && (
             <div className=" z-10 absolute bg-black/[45%] inset-0">
@@ -277,7 +288,7 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                         return { ...p, simcardPhoneNumber: e.target.value };
                       });
                     }}
-                    className=" bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
+                    className=" w-[170px] bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
                   />
                 </div>
                 <div className=" flex">
@@ -290,7 +301,7 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                         return { ...p, imei: e.target.value };
                       });
                     }}
-                    className=" bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
+                    className=" w-[170px] bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
                   />
                 </div>
                 <div className=" flex">
@@ -303,7 +314,7 @@ const AddDevice = ({ closeAddDevicePopup }: AddDeviceProps) => {
                       });
                     }}
                     type="text"
-                    className=" w-10 bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
+                    className=" w-[170px] bg-[#F5F5F5] border-b-2 border-[#656565] focus:outline-0 text-black px-2"
                   />
                 </div>
               </div>

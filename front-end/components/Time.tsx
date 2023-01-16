@@ -39,7 +39,7 @@ const Time = () => {
   return (
     <div
       onClick={handleCheck}
-      className="flex flex-col w-[241px] h-[92px] py-[10px] pl-[25px] pr-5 bg-[#F5F5F5] rounded-[5px]   absolute z-10   top-[5%]  right-[4%] scale-75 2xl:scale-100 "
+      className="flex flex-col w-[241px] h-[92px] py-[10px] pl-[25px] pr-5 bg-[#F5F5F5] rounded-[5px]   absolute z-10   top-[5%]  right-[4%] scale-[61%] 2xl:scale-100 "
     >
       <div className=" flex justify-end items-center space-x-[25px]">
         <p className=" text-[20px] font-bold">

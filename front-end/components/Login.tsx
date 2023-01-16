@@ -11,10 +11,12 @@ type LoginDetails = {
 const Login = ({ login }: { login: any }) => {
   const [loginDetails, setLoginDetails] = useState<LoginDetails>();
   const [passwordShown, setPasswordShown] = useState(false);
+  const [isLoginError, setIsLoginError] = useState(false);
   const togglePassword = () => {
     setPasswordShown((p) => !p);
   };
   const handleChangeForm = (e: ChangeEvent<HTMLInputElement>) => {
+    setIsLoginError(false);
     setLoginDetails((p) => ({ ...p, [e.target.name]: e.target.value }));
   };
   const handleSubmitForm = async (e: FormEvent) => {
@@ -34,12 +36,11 @@ const Login = ({ login }: { login: any }) => {
       const { auth_token } = res.data;
       axios.defaults.headers.common["Authorization"] = `Token ${auth_token}`;
       setCookie("userToken", auth_token);
-      alert("success");
     } catch (error) {
       console.log("error : ", error);
       login(false);
       const errors = error as Error | AxiosError;
-      alert("Something went wrong");
+      setIsLoginError(true);
       console.error(errors);
     }
   };
@@ -73,6 +74,9 @@ const Login = ({ login }: { login: any }) => {
                 {passwordShown ? <AiFillEye /> : <AiFillEyeInvisible />}
               </div>
             </div>
+            {isLoginError && (
+              <p className=" text-[#FF0000]">Something Went Wrong</p>
+            )}
           </div>
           <button
             onClick={handleSubmitForm}

@@ -233,122 +233,7 @@ export const mockDevices = [
     isWarning: true,
   },
 ];
-const mockArea2 = [
-  {
-    id: 1,
-    name: "arrondissement",
-    geoJson: {
-      crs: {
-        type: "name",
-        properties: {
-          name: "EPSG:4326",
-        },
-      },
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          geometry: {
-            type: "MultiPolygon",
-            coordinates: [
-              [
-                [
-                  [2.39865112304693, 48.8894157409669],
-                  [2.40033936500561, 48.8837471008302],
-                  [2.41069436073315, 48.878475189209],
-                  [2.37701272964483, 48.8719177246094],
-                  [2.36929440498352, 48.8833274841309],
-                  [2.36467361450207, 48.8842926025391],
-                  [2.37127304077148, 48.8956298828126],
-                  [2.37028646469111, 48.901653289795],
-                  [2.3894443511964, 48.9011573791503],
-                  [2.39649963378906, 48.8961944580079],
-                  [2.39865112304693, 48.8894157409669],
-                ],
-              ],
-            ],
-          },
-          properties: {
-            pk: "4752",
-            iso: "FRA",
-            id_0: 79,
-            id_1: 4,
-            id_2: 14,
-            id_3: 62,
-            id_4: 536,
-            id_5: 4752,
-            name_0: "France",
-            name_1: "Île-de-France",
-            name_2: "Paris",
-            name_3: "Paris, 19e arrondissement",
-            name_4: "Paris, 19e arrondissement",
-            name_5: "Paris, 19e arrondissement",
-            type_5: "Chef-lieu canton",
-            engtype_5: "Commune",
-          },
-        },
-      ],
-    },
-  },
-  {
-    id: 2,
-    name: "Cognat-Lyonne",
-    geoJson: {
-      crs: {
-        type: "name",
-        properties: {
-          name: "EPSG:4326",
-        },
-      },
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          geometry: {
-            type: "MultiPolygon",
-            coordinates: [
-              [
-                [
-                  [3.25863409042353, 46.1001014709473],
-                  [3.25985240936279, 46.103199005127],
-                  [3.27181982994085, 46.1174240112306],
-                  [3.27976512908941, 46.1214752197267],
-                  [3.28750967979431, 46.1240653991699],
-                  [3.29444074630743, 46.1197624206544],
-                  [3.32123637199408, 46.1136741638184],
-                  [3.34011745452887, 46.1141586303712],
-                  [3.3400382995606, 46.101390838623],
-                  [3.32621073722845, 46.1031875610352],
-                  [3.31727409362804, 46.0957374572754],
-                  [3.27249145507824, 46.0962409973145],
-                  [3.25863409042353, 46.1001014709473],
-                ],
-              ],
-            ],
-          },
-          properties: {
-            pk: "3433",
-            iso: "FRA",
-            id_0: 79,
-            id_1: 3,
-            id_2: 8,
-            id_3: 35,
-            id_4: 325,
-            id_5: 3433,
-            name_0: "France",
-            name_1: "Auvergne",
-            name_2: "Allier",
-            name_3: "Vichy",
-            name_4: "Escurolles",
-            name_5: "Cognat-Lyonne",
-            type_5: "Commune simple",
-            engtype_5: "Commune",
-          },
-        },
-      ],
-    },
-  },
-];
+
 export const mockDistrict = ["area1", "area2", "area3"];
 export const groupContext = createContext(null);
 
@@ -377,7 +262,6 @@ export default function Home({ isLoggedin }: HomeProps) {
   }, []);
 
   console.log(isLoggedin);
-  const [isOpenInterface, setIsOpenInterface] = useState(true);
   const [isLogin, setIsLogin] = useState(isLoggedin);
   const [isAddDevice, setIsAddDevice] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
@@ -402,7 +286,14 @@ export default function Home({ isLoggedin }: HomeProps) {
   const closeDeviceManage = () => {
     setIsDashboardOpen(false);
   };
-  console.log(selectedGroup)
+  const createMapOptions = {
+    zoomControl: true,
+    mapTypeControl: false,
+    scaleControl: true,
+    streetViewControl: false,
+    rotateControl: true,
+    fullscreenControl: true,
+  };
   return (
     <>
       <groupContext.Provider value={[setSelectedGroup, setIsDashboardOpen]}>
@@ -418,18 +309,22 @@ export default function Home({ isLoggedin }: HomeProps) {
             />
           )}
           {isLogin ? (
-            <Interface map={map} openAddDevicePopup={openAddDevicePopup} isVisible={!isDashboardOpen} />
+            <Interface
+              map={map}
+              openAddDevicePopup={openAddDevicePopup}
+              isVisible={!isDashboardOpen}
+            />
           ) : (
             <Login login={setIsLogin} />
           )}
+
           {isLoaded && (
             <GoogleMap
               mapContainerStyle={containerStyle}
               center={center}
+              options={createMapOptions}
               // zoom={10}
-              // options={{
-              //   styles: [{ stylers: [{ saturation: 50 }, { gamma: 0.5 }] }],
-              // }}
+
               onLoad={onLoad}
               onUnmount={onUnmount}
             >
