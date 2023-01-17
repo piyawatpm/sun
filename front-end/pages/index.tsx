@@ -1,37 +1,37 @@
-import React, { useState, useCallback, useEffect, createContext } from 'react';
+import React, { useState, useCallback, useEffect, createContext } from "react";
 import {
   GoogleMap,
   useJsApiLoader,
   Autocomplete,
   Polygon,
-} from '@react-google-maps/api';
+} from "@react-google-maps/api";
 
-import Interface from '../components/Interface';
-import Time from '../components/Time';
+import Interface from "../components/Interface";
+import Time from "../components/Time";
 
-import AddDevice from '../components/AddDevice';
-import Login from '../components/Login';
-import { GetServerSidePropsContext } from 'next';
-import { getCookieFromServer } from '../utils/cookie';
-import ManageDevices from '../components/ManageDevices';
+import AddDevice from "../components/AddDevice";
+import Login from "../components/Login";
+import { GetServerSidePropsContext } from "next";
+import { getCookieFromServer } from "../utils/cookie";
+import ManageDevices from "../components/ManageDevices";
 type HomeProps = {
   isLoggedin: boolean;
 };
 
-export const mockDistrict = ['area1', 'area2', 'area3'];
+export const mockDistrict = ["area1", "area2", "area3"];
 export const groupContext = createContext(null);
 
 export default function Home({ isLoggedin }: HomeProps) {
   const libraries: (
-    | 'drawing'
-    | 'geometry'
-    | 'localContext'
-    | 'places'
-    | 'visualization'
-  )[] = ['places'];
+    | "drawing"
+    | "geometry"
+    | "localContext"
+    | "places"
+    | "visualization"
+  )[] = ["places"];
   const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: 'AIzaSyCTd-4w5z5_-dQtt6U1_dK-lWXRQVSjgGU',
+    id: "google-map-script",
+    googleMapsApiKey: "AIzaSyCTd-4w5z5_-dQtt6U1_dK-lWXRQVSjgGU",
     libraries: libraries,
   });
   const [map, setMap] = useState(null);
@@ -48,12 +48,13 @@ export default function Home({ isLoggedin }: HomeProps) {
   console.log(isLoggedin);
   const [isLogin, setIsLogin] = useState(isLoggedin);
   const [isAddDevice, setIsAddDevice] = useState(false);
+  const [isAddBatch, setIsAddBatch] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState('');
+  const [selectedGroup, setSelectedGroup] = useState("");
 
   const containerStyle = {
-    width: '100vw',
-    height: '100vh',
+    width: "100vw",
+    height: "100vh",
   };
 
   const center = {
@@ -66,6 +67,12 @@ export default function Home({ isLoggedin }: HomeProps) {
   };
   const closeAddDevicePopup = () => {
     setIsAddDevice(false);
+  };
+  const openAddBatchPopup = () => {
+    setIsAddBatch(true);
+  };
+  const closeAddBatchPopup = () => {
+    setIsAddBatch(false);
   };
   const closeDeviceManage = () => {
     setIsDashboardOpen(false);
@@ -83,21 +90,23 @@ export default function Home({ isLoggedin }: HomeProps) {
   return (
     <>
       <groupContext.Provider value={[setSelectedGroup, setIsDashboardOpen]}>
-        <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
+        <div style={{ height: "100vh", width: "100%", position: "relative" }}>
           {isAddDevice && (
             <AddDevice closeAddDevicePopup={closeAddDevicePopup} />
           )}
-
+          {isAddBatch && <AddBatch />}
           {isDashboardOpen && (
             <ManageDevices
               selectedGroup={selectedGroup}
               closeDeviceManage={closeDeviceManage}
             />
           )}
+
           {isLogin ? (
             <Interface
               map={map}
               openAddDevicePopup={openAddDevicePopup}
+              openAddBatchPopup={openAddBatchPopup}
               isVisible={!isDashboardOpen}
             />
           ) : (
@@ -148,7 +157,7 @@ export default function Home({ isLoggedin }: HomeProps) {
 }
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   try {
-    const token = getCookieFromServer('userToken', ctx);
+    const token = getCookieFromServer("userToken", ctx);
     if (token) {
       return {
         props: {
